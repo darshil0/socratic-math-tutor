@@ -37,7 +37,6 @@ General Rules:
 - Never give the final answer unless the student has clearly worked through all steps themselves.
 - If the student provides a correct next step, praise them and move to the *next* single step with a detailed explanation of why that step follows.`;
 
-  // Deep-copy history and attach image to last user message if provided
   const contents = history.map((msg) => ({
     role: msg.role,
     parts: [...msg.parts] as Part[],

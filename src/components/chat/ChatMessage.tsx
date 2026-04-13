@@ -34,10 +34,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
               remarkPlugins={[remarkMath]} 
               rehypePlugins={[rehypeKatex]}
               components={{
-                // Custom math rendering to ensure consistency
-                code({ inline, className, children, ...props }) {
+                code({ className, children, ...props }) {
                   const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
+                  return match ? (
                     <div className="bg-[#fcfaf7] p-4 rounded-xl border border-[#e8e2d9] overflow-x-auto my-4">
                       <code className={className} {...props}>
                         {children}

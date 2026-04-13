@@ -10,7 +10,7 @@ interface ChatInputProps {
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClearImage: () => void;
   onSend: (overrideInput?: string) => void;
-  selectedImage: any;
+  selectedImage: { data: string; mimeType: string } | null;
 }
 
 export function ChatInput({ 
@@ -34,7 +34,6 @@ export function ChatInput({
   return (
     <div className="p-6 bg-white border-t border-[#e8e2d9]">
       <div className="max-w-3xl mx-auto space-y-4">
-        {/* Image Preview */}
         <AnimatePresence>
           {previewUrl && (
             <motion.div 
