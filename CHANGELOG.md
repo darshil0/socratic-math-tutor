@@ -2,6 +2,14 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.1] - 2026-04-13
+
+### Changed
+- **Directory Consolidation**: Reorganized the `src` directory into feature-based subfolders: `components/chat`, `components/layout`, `components/library`, and `components/modals`.
+- **Services Migration**: Moved core AI logic to `src/services/` for better separation of concerns.
+- **Types Centralization**: Created a dedicated `src/types/` directory to host all shared interfaces, resolving potential circular dependencies and improving code discoverability.
+
+
 ## [1.4.0] - 2026-04-13
 
 ### Added

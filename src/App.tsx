@@ -1,14 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
-import { getSocraticResponse, isApiKeyConfigured, Message } from "./GeminiService";
-import { ConceptLibrary } from "./ConceptLibrary";
+import { getSocraticResponse, isApiKeyConfigured } from "./services/GeminiService";
+import { ConceptLibrary } from "./components/library/ConceptLibrary";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { Message } from "./types";
 
 // Components
-import { Header } from "./components/Header";
-import { ChatArea } from "./components/ChatArea";
-import { ChatInput } from "./components/ChatInput";
-import { ApiKeyModal } from "./components/ApiKeyModal";
+import { Header } from "./components/layout/Header";
+import { ChatArea } from "./components/chat/ChatArea";
+import { ChatInput } from "./components/chat/ChatInput";
+import { ApiKeyModal } from "./components/modals/ApiKeyModal";
 
 export default function App() {
   const [messages, setMessages] = useLocalStorage<Message[]>("socratic_chat_history", []);

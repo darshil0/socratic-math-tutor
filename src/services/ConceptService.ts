@@ -1,36 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { Concept } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-export interface ExampleProblem {
-  title: string;
-  problem: string;
-}
-
-export interface QuizQuestion {
-  question: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-  hint: string;
-}
-
-export interface AnalogyStep {
-  title: string;
-  description: string;
-}
-
-export interface Concept {
-  id: string;
-  title: string;
-  description: string;
-  content: string; // Markdown with LaTeX
-  category: string;
-  hint: string;
-  exampleProblems: ExampleProblem[];
-  interactiveQuiz: QuizQuestion[];
-  interactiveAnalogy: AnalogyStep[];
-}
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "invalid-key" });
 
 export async function searchConcepts(query: string): Promise<Concept[]> {
   const response = await ai.models.generateContent({

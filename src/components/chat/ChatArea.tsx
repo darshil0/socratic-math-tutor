@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Image as ImageIcon, Info, Camera, GraduationCap, Loader2 } from "lucide-react";
-import { Message } from "../GeminiService";
+import { Message } from "../../types";
 import { ChatMessage } from "./ChatMessage";
 
 interface ChatAreaProps {

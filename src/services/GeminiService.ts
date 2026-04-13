@@ -1,15 +1,10 @@
 import { GoogleGenAI, Part } from "@google/genai";
+import { Message } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "invalid-key" });
 
 export function isApiKeyConfigured() {
   return !!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "";
-}
-
-
-export interface Message {
-  role: "user" | "model";
-  parts: { text: string }[];
 }
 
 export async function* getSocraticResponse(

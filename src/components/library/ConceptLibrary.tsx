@@ -13,7 +13,8 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { searchConcepts, Concept } from "./ConceptService";
+import { searchConcepts } from "../../services/ConceptService";
+import { Concept } from "../../types";
 
 interface ConceptLibraryProps {
   onClose: () => void;
