@@ -2,6 +2,27 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.2.0] - 2026-04-13
+
+### Fixed
+- **Model Names**: Corrected fictional model identifiers to real Gemini API model names.
+  - `GeminiService.ts`: `gemini-3.1-pro-preview` → `gemini-2.5-pro-preview-05-06`
+  - `ConceptService.ts`: `gemini-3-flash-preview` → `gemini-2.0-flash`
+- **Thinking Config**: Replaced unsupported `ThinkingLevel.HIGH` enum with the correct `thinkingBudget: 8000` config field in `GeminiService.ts`.
+- **Null Safety**: Added a null/undefined guard on `response.text` in `ConceptService.ts` before calling `JSON.parse`, preventing a silent runtime crash when the API returns an empty response.
+- **Type Safety**: Replaced untyped `as any` casts in `GeminiService.ts` with properly typed `Part` objects from `@google/genai`.
+- **Async correctness**: Wrapped the `getSocraticResponse` generator call with `await` inside the `for await` loop in `App.tsx` to correctly resolve the outer `Promise<AsyncGenerator>` before iteration.
+- **Stale closure**: Refactored `handleSend` and `handleTryProblem` in `App.tsx` to use `useCallback` with correct dependency arrays, preventing stale-closure bugs when the library sends a problem to the chat.
+- **Race condition**: Added a 300 ms delay in `handleTryProblem` to ensure the Concept Library exit animation completes before the chat message is sent.
+- **Input lockout**: Added `disabled={isLoading}` to the text input and quick-action buttons so the user cannot submit while a response is streaming.
+- **Enter key guard**: Added `!isLoading` check on the `onKeyDown` Enter handler to prevent duplicate submissions.
+- **Page title**: Fixed `index.html` `<title>` from "My Google AI Studio App" to "Socratic Math Tutor".
+- **Font loading**: Added Google Fonts `<link>` tags to `index.html` for Cormorant Garamond and Inter, ensuring the serif and sans-serif fonts load correctly in all environments.
+- **Missing dev dependencies**: Added `@types/react`, `@types/react-dom`, and `@types/katex` to `package.json` devDependencies to fix TypeScript compilation errors.
+- **Env completeness**: Added `APP_URL` to the `define` block in `vite.config.ts` so it is available at runtime via `process.env.APP_URL`, matching `.env.example`.
+- **Camera attribute**: Added `capture="environment"` to the hidden file input in `App.tsx` so mobile browsers open the rear camera directly.
+- **Image mutation**: `GeminiService.ts` now deep-copies the `history` array before mutating it with the attached image part, preventing unintended state mutation of the caller's message array.
+
 ## [1.1.0] - 2026-04-10
 
 ### Added
