@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.4** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.4.5** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
@@ -85,7 +85,24 @@ src/
 | Variable | Required | Description |
 |---|---|---|
 | `GEMINI_API_KEY` | Yes | Your Google AI Studio API key. Get one at [aistudio.google.com](https://aistudio.google.com/app/apikey). |
-| `APP_URL` | No | Public URL where the app is hosted. Auto-injected by AI Studio; leave blank for local development. |
+| `APP_URL` | No | Placeholder for public URL (currently unused in core logic). |
+
+---
+
+## Troubleshooting
+
+### API Key Issues
+If the "API Key Required" modal persists after adding your key:
+1. Ensure the `.env` file is in the root directory (same level as `package.json`).
+2. Verify the variable name is exactly `GEMINI_API_KEY`.
+3. Restart the development server (`npm run dev`) to load the new environment variables.
+4. Check that your key is active and has permissions for Gemini 2.0 models in AI Studio.
+
+### Port Conflicts
+The app defaults to port `3000`. If this port is in use, Vite will attempt to use another. You can force a port or change it in `package.json`:
+```bash
+npm run dev -- --port 3001
+```
 
 ---
 

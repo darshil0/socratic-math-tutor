@@ -4,7 +4,8 @@ import { Message } from "../types";
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "invalid-key" });
 
 export function isApiKeyConfigured() {
-  return !!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "";
+  const apiKey = process.env.GEMINI_API_KEY;
+  return !!apiKey && apiKey !== "" && apiKey !== "your_key_here" && apiKey !== "invalid-key";
 }
 
 export async function* getSocraticResponse(
