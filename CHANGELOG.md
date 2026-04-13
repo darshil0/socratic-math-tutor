@@ -2,6 +2,17 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.3.1] - 2026-04-13
+
+### Fixed
+- **Code Cleanup**: Removed unnecessary dependencies including `express`, `dotenv`, and `tsx` to streamline the project and reduce bundle size.
+- **Consistency**: Applied uniform formatting (spacing, indentation, and quoting) across all `.tsx` and `.ts` files in the `src` directory.
+
+### Improved
+- **Project Structure**: Verified that all core components are correctly modularized and free of redundant code.
+
+
+
 ## [1.3.0] - 2026-04-13
 
 ### Fixed
