@@ -1,6 +1,12 @@
 export interface Message {
   role: "user" | "model";
-  parts: { text: string; inlineData?: { data: string; mimeType: string } }[];
+  parts: {
+    text?: string;
+    inlineData?: {
+      data: string;
+      mimeType: string
+    }
+  }[];
 }
 
 export interface ExampleProblem {

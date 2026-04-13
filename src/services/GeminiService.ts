@@ -8,8 +8,7 @@ export function isApiKeyConfigured() {
 }
 
 export async function* getSocraticResponse(
-  history: Message[],
-  image?: { data: string; mimeType: string }
+  history: Message[]
 ): AsyncGenerator<string> {
   const systemInstruction = `You are a compassionate, Socratic math tutor. Your goal is to guide students to the answer, not give it. 
 
@@ -38,37 +37,28 @@ General Rules:
 - If the student provides a correct next step, praise them and move to the *next* single step with a detailed explanation of why that step follows.`;
 
   const contents = history.map((msg) => ({
-    role: msg.role,
-    parts: msg.parts.map((p) => ({ ...p })) as Part[],
+    role: msg.role === "model" ? "model" : "user",
+    parts: msg.parts.map((p) => {
+      if (p.inlineData) {
+        return {
+          inlineData: {
+            data: p.inlineData.data,
+            mimeType: p.inlineData.mimeType,
+          },
+        } as Part;
+      }
+      return { text: p.text || "" } as Part;
+    }),
   }));
-
-  if (image) {
-    const imagePart: Part = {
-      inlineData: {
-        data: image.data,
-        mimeType: image.mimeType,
-      },
-    };
-
-    const lastMessage = contents[contents.length - 1];
-    if (lastMessage && lastMessage.role === "user") {
-      lastMessage.parts.push(imagePart);
-    } else {
-      contents.push({
-        role: "user",
-        parts: [
-          { text: "Here is a math problem I need help with." },
-          imagePart,
-        ],
-      });
-    }
-  }
 
   const responseStream = await ai.models.generateContentStream({
     model: "gemini-2.0-pro-exp-02-05",
     contents,
     config: {
-      systemInstruction,
+      systemInstruction: {
+        role: "system",
+        parts: [{ text: systemInstruction }],
+      },
       thinkingConfig: { thinkingBudget: 8000 },
     },
   });

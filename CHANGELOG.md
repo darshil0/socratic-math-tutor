@@ -2,6 +2,20 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.4] - 2026-04-14
+
+### Added
+- **Image Persistence**: User-uploaded images are now included directly in the chat history, ensuring they are saved to `localStorage` and remain visible after a page refresh.
+- **Chat Image Rendering**: The `ChatMessage` component now supports rendering multiple parts, including base64-encoded images.
+
+### Fixed
+- **API Reliability**: Refactored `GeminiService.ts` to correctly handle the `@google/genai` SDK v2.0 requirements, including the correct `systemInstruction` format and `AsyncGenerator` streaming logic.
+- **Type Safety**: Improved the `Message` type definition to correctly align with the Gemini API part structure, making `text` optional and adding `inlineData`.
+- **Logic Cleanup**: Removed unused variables and optimized the `handleSend` flow in `App.tsx`.
+
+### Changed
+- **Version Bump**: Incremented the project version to 1.4.4.
+
 ## [1.4.3] - 2026-04-13
 
 ### Changed
