@@ -1,4 +1,4 @@
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, Part } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -37,40 +37,40 @@ General Rules:
 - Never give the final answer unless the student has clearly worked through all steps themselves.
 - If the student provides a correct next step, praise them and move to the *next* single step with a detailed explanation of why that step follows.`;
 
-  const contents = [...history];
-  
+  // Deep-copy history and attach image to last user message if provided
+  const contents = history.map((msg) => ({
+    role: msg.role,
+    parts: [...msg.parts] as Part[],
+  }));
+
   if (image) {
-    // If there's an image, we append it to the last user message or create a new one
+    const imagePart: Part = {
+      inlineData: {
+        data: image.data,
+        mimeType: image.mimeType,
+      },
+    };
+
     const lastMessage = contents[contents.length - 1];
     if (lastMessage && lastMessage.role === "user") {
-      lastMessage.parts.push({
-        inlineData: {
-          data: image.data,
-          mimeType: image.mimeType,
-        },
-      } as any);
+      lastMessage.parts.push(imagePart);
     } else {
       contents.push({
         role: "user",
         parts: [
           { text: "Here is a math problem I need help with." },
-          {
-            inlineData: {
-              data: image.data,
-              mimeType: image.mimeType,
-            },
-          } as any,
+          imagePart,
         ],
       });
     }
   }
 
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-3.1-pro-preview",
+    model: "gemini-2.5-pro-preview-05-06",
     contents,
     config: {
       systemInstruction,
-      thinkingConfig: { thinkingLevel: ThinkingLevel.HIGH },
+      thinkingConfig: { thinkingBudget: 8000 },
     },
   });
 
