@@ -1,7 +1,7 @@
 {
-  "name": "react-example",
+  "name": "socratic-math-tutor",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
@@ -28,7 +28,10 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/katex": "^0.16.7",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.21",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
