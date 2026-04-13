@@ -2,6 +2,22 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.3.0] - 2026-04-13
+
+### Fixed
+- **Model Evolution**: Updated the tutoring AI to use `gemini-2.0-pro-exp-02-05`, ensuring compatibility with advanced mathematical reasoning and the `thinkingBudget` configuration.
+- **Generator Handling**: Fixed a redundant `await` in the `AsyncGenerator` loop within `App.tsx`, improving the efficiency of the streaming response display.
+- **Import Cleanup**: Removed unused `ThinkingLevel` import from `@google/genai` in `GeminiService.ts`.
+
+### Changed
+- **Code Modularity**: Extracted the `ConceptLibrary` component into its own dedicated file (`ConceptLibrary.tsx`) to improve maintainability and reduce the size of `App.tsx`.
+- **Dependency Refresh**: Updated `@google/genai` and `typescript` to their latest stable versions for improved security and performance.
+- **Documentation**: Updated `README.md` to reflect the latest model selections and technical specifications.
+
+### Improved
+- **Code Formatting**: Applied consistent formatting across the core codebase files.
+
+
 ## [1.2.0] - 2026-04-13
 
 ### Fixed

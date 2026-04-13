@@ -8,14 +8,14 @@ A compassionate, patient, and step-by-step AI math tutor that helps students mas
 - **Socratic Method**: The AI guides you through one step at a time, explaining the "how" and "why" instead of just giving the answer.
 - **Conceptual Depth**: Ask "Why did we do that?" to get detailed analogies, interactive examples, and formula breakdowns.
 - **Concept Library**: Browse and search for mathematical concepts with interactive analogies, quizzes, and practice problems.
-- **High-Thinking Reasoning**: Powered by Gemini 2.5 Pro with extended thinking budget for advanced mathematical logic.
+- **High-Thinking Reasoning**: Powered by Gemini 2.0 Pro with extended thinking budget for advanced mathematical logic.
 - **Math Rendering**: Beautifully rendered LaTeX equations using KaTeX.
 - **Warm Design**: A polished, organic UI designed to reduce math anxiety and foster a positive learning environment.
 
 ## Tech Stack
 
 - **Frontend**: React 19, Vite 6, Tailwind CSS v4
-- **AI (Tutoring)**: Google Gemini API (`gemini-2.5-pro-preview-05-06`) with High Thinking Budget
+- **AI (Tutoring)**: Google Gemini API (`gemini-2.0-pro-exp-02-05`) with High Thinking Budget
 - **AI (Concept Search)**: Google Gemini API (`gemini-2.0-flash`) with structured JSON output
 - **Animations**: Motion (Framer Motion v12)
 - **Math Rendering**: React-Markdown, Remark-Math, Rehype-Katex, KaTeX

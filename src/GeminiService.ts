@@ -1,4 +1,4 @@
-import { GoogleGenAI, ThinkingLevel, Part } from "@google/genai";
+import { GoogleGenAI, Part } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -66,7 +66,7 @@ General Rules:
   }
 
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-2.5-pro-preview-05-06",
+    model: "gemini-2.0-pro-exp-02-05",
     contents,
     config: {
       systemInstruction,
