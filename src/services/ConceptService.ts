@@ -91,7 +91,7 @@ export async function searchConcepts(query: string): Promise<Concept[]> {
   try {
     return JSON.parse(text) as Concept[];
   } catch (e) {
-    console.error("Failed to parse concepts:", e);
+    console.error(`Failed to parse concepts for query "${query}":`, e);
     return [];
   }
 }

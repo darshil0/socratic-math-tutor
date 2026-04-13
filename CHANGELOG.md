@@ -2,6 +2,18 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.5] - 2026-04-14
+
+### Fixed
+- **API Key Validation**: Refined `isApiKeyConfigured` to explicitly catch common placeholder values like `"your_key_here"` and `"invalid-key"`, preventing silent failures with default template values.
+- **Debugging**: Enhanced `ConceptService` error logging to include the failed search query, significantly improving the ability to diagnose malformed LLM responses.
+
+### Changed
+- **Metadata Consistency**: Updated `metadata.json` name to `socratic-math-tutor` to match `package.json`, ensuring consistency across project descriptors.
+- **Stylistic Standardization**: Standardized quote usage across `src/main.tsx` and `vite.config.ts` to double quotes, aligning with the project's primary coding style.
+- **Documentation**: Updated `README.md` with a new Troubleshooting section and clarified the status of the `APP_URL` environment variable.
+- **Version Bump**: Incremented project version to 1.4.5 across all metadata files.
+
 ## [1.4.4] - 2026-04-14
 
 ### Added
