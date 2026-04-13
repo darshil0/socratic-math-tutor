@@ -2,6 +2,21 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.0] - 2026-04-13
+
+### Added
+- **Chat Persistence**: Implemented `localStorage` sync via a custom `useLocalStorage` hook, allowing tutoring sessions to persist across page refreshes.
+- **API Key Guard**: Added a startup validation check and a professional `ApiKeyModal` UI to prevent silent failures when the Gemini API key is missing.
+- **Session Management**: Added a "Clear Session" feature in the header to allow students to reset their chat history.
+
+### Changed
+- **Architectural Refactoring**: Continued modularization by decomposing `App.tsx` into specialized components: `Header`, `ChatArea`, `ChatMessage`, and `ChatInput`.
+- **Math Rendering**: Enhanced the `ChatMessage` component with standardized `ReactMarkdown` overrides for more consistent LaTeX rendering and styling.
+
+### Fixed
+- **Type Safety**: Improved type definitions for message parts and service interactions.
+
+
 ## [1.3.1] - 2026-04-13
 
 ### Fixed

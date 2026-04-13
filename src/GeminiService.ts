@@ -1,6 +1,11 @@
 import { GoogleGenAI, Part } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "invalid-key" });
+
+export function isApiKeyConfigured() {
+  return !!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "";
+}
+
 
 export interface Message {
   role: "user" | "model";
