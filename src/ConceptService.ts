@@ -34,7 +34,7 @@ export interface Concept {
 
 export async function searchConcepts(query: string): Promise<Concept[]> {
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
+    model: "gemini-2.0-flash",
     contents: `Generate a list of 5-8 mathematical concepts related to "${query}". 
     For each concept, provide:
     - id: a unique slug
@@ -111,8 +111,14 @@ export async function searchConcepts(query: string): Promise<Concept[]> {
     },
   });
 
+  const text = response.text;
+  if (!text) {
+    console.error("Empty response from concept search");
+    return [];
+  }
+
   try {
-    return JSON.parse(response.text);
+    return JSON.parse(text) as Concept[];
   } catch (e) {
     console.error("Failed to parse concepts:", e);
     return [];
