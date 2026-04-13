@@ -2,6 +2,18 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.2] - 2026-04-13
+
+### Fixed
+- **Unused Imports**: Removed unused `useRef` from `App.tsx` and unused `useEffect` from `useLocalStorage.ts`.
+- **Type Safety**: Replaced `any` type on `selectedImage` prop in `ChatInput.tsx` with a proper typed interface.
+- **Deprecated API**: Removed the deprecated `inline` prop from the `code` renderer in `ChatMessage.tsx`, ensuring compatibility with `react-markdown` v9+.
+
+### Improved
+- **Code Clarity**: Removed redundant and self-explanatory inline comments across `useLocalStorage.ts`, `GeminiService.ts`, and `ChatInput.tsx`.
+
+
+
 ## [1.4.1] - 2026-04-13
 
 ### Changed
