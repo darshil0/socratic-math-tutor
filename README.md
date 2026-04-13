@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.3** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.4.4** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
@@ -24,7 +24,7 @@ Socratic Math Tutor helps students genuinely understand mathematics rather than 
 
 **Math Rendering** — Equations are rendered beautifully using KaTeX.
 
-**Session Persistence** — Your conversation is saved to `localStorage` and survives page refreshes. Use the trash icon in the header to start fresh.
+**Session Persistence** — Your entire conversation, including uploaded images, is saved to `localStorage` and survives page refreshes. Use the trash icon in the header to start fresh.
 
 **API Key Guard** — If the Gemini API key is missing on startup, a friendly overlay walks you through setup before anything else loads.
 

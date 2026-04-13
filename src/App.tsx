@@ -51,7 +51,10 @@ export default function App() {
 
     const userMessage: Message = {
       role: "user",
-      parts: [{ text: messageText || "I've uploaded a problem for us to look at." }],
+      parts: [
+        { text: messageText || "I've uploaded a problem for us to look at." },
+        ...(selectedImage ? [{ inlineData: { data: selectedImage.data, mimeType: selectedImage.mimeType } }] : [])
+      ],
     };
 
     const newMessages = [...messages, userMessage];
@@ -59,12 +62,11 @@ export default function App() {
     setInput("");
     setIsLoading(true);
 
-    const currentImage = selectedImage;
     clearImage();
 
     try {
       let fullResponse = "";
-      const responseStream = getSocraticResponse(newMessages, currentImage ?? undefined);
+      const responseStream = getSocraticResponse(newMessages);
       
       setMessages(prev => [...prev, { role: "model", parts: [{ text: "" }] }]);
 
