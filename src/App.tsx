@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Camera, 
@@ -387,8 +387,8 @@ export default function App() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSend = async (overrideInput?: string) => {
-    const messageText = overrideInput || input;
+  const handleSend = useCallback(async (overrideInput?: string) => {
+    const messageText = overrideInput ?? input;
     if (!messageText.trim() && !selectedImage) return;
 
     const userMessage: Message = {
@@ -406,11 +406,11 @@ export default function App() {
 
     try {
       let fullResponse = "";
-      const responseStream = getSocraticResponse(newMessages, currentImage || undefined);
+      const responseStream = getSocraticResponse(newMessages, currentImage ?? undefined);
       
       setMessages(prev => [...prev, { role: "model", parts: [{ text: "" }] }]);
 
-      for await (const chunk of responseStream) {
+      for await (const chunk of await responseStream) {
         fullResponse += chunk;
         setMessages(prev => {
           const updated = [...prev];
@@ -430,12 +430,15 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, messages, selectedImage]);
 
-  const handleTryProblem = (problem: string) => {
+  const handleTryProblem = useCallback((problem: string) => {
     setShowLibrary(false);
-    handleSend(`I'd like to try this problem: ${problem}`);
-  };
+    // Use setTimeout to ensure the library close animation completes before sending
+    setTimeout(() => {
+      handleSend(`I'd like to try this problem: ${problem}`);
+    }, 300);
+  }, [handleSend]);
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto bg-[#fcfaf7] font-sans">
@@ -585,6 +588,7 @@ export default function App() {
             <input 
               type="file" 
               accept="image/*" 
+              capture="environment"
               className="hidden" 
               ref={fileInputRef}
               onChange={handleImageUpload}
@@ -605,9 +609,10 @@ export default function App() {
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
                 placeholder={selectedImage ? "Ask about this problem..." : "Type your message or ask 'Why?'"}
                 className="w-full px-6 py-4 bg-[#f5f2ed] border-none rounded-full focus:ring-2 focus:ring-[#5A5A40] transition-all outline-none text-[#2d2a26]"
+                disabled={isLoading}
               />
               <button 
                 onClick={() => handleSend()}
@@ -623,6 +628,7 @@ export default function App() {
             <button 
               onClick={() => setInput("Why did we do that?")}
               className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
+              disabled={isLoading}
             >
               <ChevronRight size={14} />
               "Why did we do that?"
@@ -630,6 +636,7 @@ export default function App() {
             <button 
               onClick={() => setInput("Can you give me a hint?")}
               className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
+              disabled={isLoading}
             >
               <ChevronRight size={14} />
               "Can you give me a hint?"
@@ -640,4 +647,3 @@ export default function App() {
     </div>
   );
 }
-
