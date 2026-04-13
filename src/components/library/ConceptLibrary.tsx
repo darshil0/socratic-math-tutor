@@ -21,6 +21,12 @@ interface ConceptLibraryProps {
   onTryProblem: (problem: string) => void;
 }
 
+interface QuizState {
+  questionIdx: number;
+  selectedOption: number | null;
+  isCorrect: boolean | null;
+}
+
 export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [concepts, setConcepts] = useState<Concept[]>([]);
@@ -31,7 +37,7 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
   const [analogyStep, setAnalogyStep] = useState(0);
   const [showConceptHint, setShowConceptHint] = useState(false);
   const [showQuizHint, setShowQuizHint] = useState(false);
-  const [quizState, setQuizState] = useState<{ questionIdx: number; selectedOption: number | null; isCorrect: boolean | null }>({
+  const [quizState, setQuizState] = useState<QuizState>({
     questionIdx: 0,
     selectedOption: null,
     isCorrect: null
