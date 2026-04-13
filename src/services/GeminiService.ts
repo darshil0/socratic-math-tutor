@@ -10,7 +10,7 @@ export function isApiKeyConfigured() {
 export async function* getSocraticResponse(
   history: Message[],
   image?: { data: string; mimeType: string }
-) {
+): AsyncGenerator<string> {
   const systemInstruction = `You are a compassionate, Socratic math tutor. Your goal is to guide students to the answer, not give it. 
 
 When an image is provided:
@@ -39,7 +39,7 @@ General Rules:
 
   const contents = history.map((msg) => ({
     role: msg.role,
-    parts: [...msg.parts] as Part[],
+    parts: msg.parts.map((p) => ({ ...p })) as Part[],
   }));
 
   if (image) {

@@ -1,16 +1,20 @@
-import { useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Camera, X, Send, ChevronRight } from "lucide-react";
+
+interface SelectedImage {
+  data: string;
+  mimeType: string;
+}
 
 interface ChatInputProps {
   input: string;
   setInput: (val: string) => void;
   isLoading: boolean;
   previewUrl: string | null;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCameraClick: () => void;
   onClearImage: () => void;
   onSend: (overrideInput?: string) => void;
-  selectedImage: { data: string; mimeType: string } | null;
+  selectedImage: SelectedImage | null;
 }
 
 export function ChatInput({ 
@@ -18,12 +22,11 @@ export function ChatInput({
   setInput, 
   isLoading, 
   previewUrl, 
-  onImageUpload, 
+  onCameraClick,
   onClearImage, 
   onSend,
   selectedImage
 }: ChatInputProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !isLoading) {
@@ -60,16 +63,8 @@ export function ChatInput({
         </AnimatePresence>
 
         <div className="flex items-center gap-3">
-          <input 
-            type="file" 
-            accept="image/*" 
-            capture="environment"
-            className="hidden" 
-            ref={fileInputRef}
-            onChange={onImageUpload}
-          />
           <button 
-            onClick={() => fileInputRef.current?.click()}
+            onClick={onCameraClick}
             className="p-3 text-[#5c5751] hover:bg-[#f5f2ed] rounded-full transition-colors group relative"
             title="Upload image"
             disabled={isLoading}

@@ -39,11 +39,11 @@ export default function App() {
     }
   };
 
-  const clearImage = () => {
+  const clearImage = useCallback(() => {
     setSelectedImage(null);
     setPreviewUrl(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  }, []);
 
   const handleSend = useCallback(async (overrideInput?: string) => {
     const messageText = (overrideInput ?? input).trim();
@@ -129,10 +129,19 @@ export default function App() {
         setInput={setInput}
         isLoading={isLoading}
         previewUrl={previewUrl}
-        onImageUpload={handleImageUpload}
+        onCameraClick={() => fileInputRef.current?.click()}
         onClearImage={clearImage}
         onSend={handleSend}
         selectedImage={selectedImage}
+      />
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        className="hidden"
+        accept="image/*"
+        capture="environment"
       />
     </div>
   );
