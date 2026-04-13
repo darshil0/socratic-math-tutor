@@ -1,8 +1,50 @@
+# ─── Dependencies ───────────────────────────────────────────────────────────
 node_modules/
-build/
+.pnp
+.pnp.js
+
+# ─── Build & Output ──────────────────────────────────────────────────────────
 dist/
+dist-ssr/
+build/
+out/
+
+# ─── Cache & Temp ────────────────────────────────────────────────────────────
+.cache/
+.vite/
+*.tsbuildinfo
+
+# ─── Testing & Coverage ──────────────────────────────────────────────────────
 coverage/
-.DS_Store
-*.log
-.env*
+.nyc_output/
+
+# ─── Environment & Secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Editor & IDE ────────────────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini

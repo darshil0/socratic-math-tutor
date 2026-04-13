@@ -2,6 +2,14 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.3] - 2026-04-13
+
+### Changed
+- **`.gitignore` Overhaul**: Replaced the minimal 8-line ignore file with a comprehensive, categorized ruleset covering Vite/TypeScript caches (`.vite/`, `*.tsbuildinfo`), all `.env.*` local variants, editor directories (`.vscode/`, `.idea/`), OS artifacts (`Thumbs.db`, `Desktop.ini`), and extended log patterns (`yarn-debug.log*`, `pnpm-debug.log*`).
+- **`.env.example` Improvements**: Rewrote the environment variable template with a file-level header, a `cp` quickstart instruction, per-variable documentation including an AI Studio API key link, and an explicit empty default for `APP_URL` to signal it is optional during local development.
+
+
+
 ## [1.4.2] - 2026-04-13
 
 ### Fixed

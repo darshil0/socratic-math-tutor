@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.2** — A compassionate, patient, and step-by-step AI math tutor that helps students master complex calculus and algebra problems through the Socratic method.
+> **Version 1.4.3** — A compassionate, patient, and step-by-step AI math tutor that helps students master complex calculus and algebra problems through the Socratic method.
 
 ## Features
 
@@ -43,7 +43,10 @@ src/
 ## Getting Started
 
 1. Clone the repository.
-2. Copy `.env.example` to `.env` and set your `GEMINI_API_KEY`.
+2. Copy `.env.example` to `.env` and set your `GEMINI_API_KEY`:
+   ```bash
+   cp .env.example .env
+   ```
 3. Run `npm install` then `npm run dev`.
 4. Upload a photo of your math problem using the camera icon, or type a question directly.
 5. Follow the tutor's first step and ask "Why did we do that?" anytime you need deeper understanding.
@@ -51,10 +54,10 @@ src/
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
-| `GEMINI_API_KEY` | **Required.** Your Google AI Studio API key. Get one at [aistudio.google.com](https://aistudio.google.com/app/apikey). |
-| `APP_URL` | The URL where this app is hosted (injected automatically by AI Studio). |
+| Variable | Required | Description |
+|---|---|---|
+| `GEMINI_API_KEY` | ✅ Yes | Your Google AI Studio API key. Get one at [aistudio.google.com](https://aistudio.google.com/app/apikey). |
+| `APP_URL` | ❌ No | The public URL where this app is hosted (auto-injected by AI Studio; leave blank for local dev). |
 
 ## Notes
 
@@ -63,3 +66,7 @@ src/
 - The Concept Library uses `gemini-2.0-flash` for fast, structured JSON concept generation.
 - Chat history persists in the browser's `localStorage`. Use the trash icon in the header to clear your session.
 - If the `GEMINI_API_KEY` is missing, an overlay will guide you through the setup process before you can start.
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for a full history of releases and changes.
