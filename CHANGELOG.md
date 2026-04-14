@@ -2,6 +2,19 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.6] - 2026-04-14
+
+### Fixed
+- **Path Alias Mismatch**: Corrected `vite.config.ts` to resolve the `@` alias to `src/` instead of the project root, aligning it with the `tsconfig.json` mapping of `"@/*" → "src/*"`. This mismatch would cause runtime import failures for any component using `@/` prefixed paths.
+- **Overlay Positioning**: Added `relative` positioning to the root `<div>` in `App.tsx`. The `ConceptLibrary` overlay uses `absolute inset-0` to fill the viewport, which requires a positioned ancestor — without this fix the overlay escaped its container and could cover unintended areas of the page.
+- **Functional Callback Detection**: Replaced `value instanceof Function` with `typeof value === "function"` in `useLocalStorage.ts`. The `instanceof` check is unreliable for arrow functions across realm boundaries; `typeof` is the correct and portable approach.
+- **SDK Error Resilience**: Wrapped the `response.text` getter access in `ConceptService.ts` inside a dedicated `try/catch`. The `@google/genai` SDK getter can throw when the response has no candidates; the previous null check only ran after the potential throw, so errors were silently swallowed and the function returned nothing.
+- **AnimatePresence Key Anti-Pattern**: Replaced `key={idx}` (array index) with a stable content-derived key in `ChatArea.tsx`. Index keys cause `AnimatePresence` to mis-identify elements during insertions and deletions, producing broken enter/exit animations.
+- **Shift+Enter Guard**: Added `!e.shiftKey` check to the `onKeyDown` handler in `ChatInput.tsx` so pressing Shift+Enter does not trigger a send. Also added `e.preventDefault()` to suppress any default browser behaviour on Enter. This correctly reserves Shift+Enter for future multiline textarea upgrades.
+
+### Changed
+- **Version Bump**: Incremented project version to 1.4.6.
+
 ## [1.4.5] - 2026-04-14
 
 ### Fixed

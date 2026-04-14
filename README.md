@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.5** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.4.6** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
@@ -98,8 +98,18 @@ If the "API Key Required" modal persists after adding your key:
 3. Restart the development server (`npm run dev`) to load the new environment variables.
 4. Check that your key is active and has permissions for Gemini 2.0 models in AI Studio.
 
+### Concept Library Overlay Not Covering the Page
+If the Concept Library appears misaligned or doesn't fill the screen, ensure the root `<div>` in `App.tsx` has the `relative` Tailwind class. The overlay uses `absolute inset-0` and requires a positioned ancestor to scope correctly.
+
+### Import Alias Errors (`@/...` paths not resolving)
+The `@` alias in `vite.config.ts` must point to `src/`, not the project root. Verify the alias reads:
+```ts
+alias: { "@": path.resolve(__dirname, "src") }
+```
+This aligns with the `tsconfig.json` mapping of `"@/*" → "src/*"`.
+
 ### Port Conflicts
-The app defaults to port `3000`. If this port is in use, Vite will attempt to use another. You can force a port or change it in `package.json`:
+The app defaults to port `3000`. If this port is in use, Vite will attempt to use another. You can force a port in `package.json`:
 ```bash
 npm run dev -- --port 3001
 ```
@@ -109,6 +119,7 @@ npm run dev -- --port 3001
 ## Usage Notes
 
 - The input field and quick-action buttons are disabled while the AI is responding, preventing duplicate submissions.
+- Pressing **Enter** sends the message; **Shift+Enter** is reserved for future multiline input support and does not trigger a send.
 - On mobile, the file input uses `capture="environment"` to open the rear camera directly.
 - The Concept Library uses `gemini-2.0-flash` for fast, structured JSON concept generation.
 - Chat history is stored in the browser's `localStorage`. Click the trash icon in the header to clear your session.

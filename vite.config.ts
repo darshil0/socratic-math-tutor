@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "."),
+        // Must align with tsconfig.json: "@/*" -> "src/*"
+        "@": path.resolve(__dirname, "src"),
       },
     },
     server: {
