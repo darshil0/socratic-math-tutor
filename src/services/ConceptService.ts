@@ -82,9 +82,17 @@ export async function searchConcepts(query: string): Promise<Concept[]> {
     },
   });
 
-  const text = response.text;
+  // Safely access response.text — the SDK getter can throw if there are no candidates
+  let text: string | null = null;
+  try {
+    text = response.text ?? null;
+  } catch (e) {
+    console.error(`Failed to read response text for query "${query}":`, e);
+    return [];
+  }
+
   if (!text) {
-    console.error("Empty response from concept search");
+    console.error(`Empty response from concept search for query "${query}"`);
     return [];
   }
 
