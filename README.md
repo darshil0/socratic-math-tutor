@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.6** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.4.7** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 

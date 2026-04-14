@@ -2,6 +2,16 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.4.7] - 2026-04-14
+
+### Added
+- **Centralized Prompts**: Moved all Socratic system instructions and tutor guidelines into a dedicated `src/constants/prompts.ts` file, improving maintainability and ensuring consistent AI behavior across different services.
+- **Custom Chat Hook**: Extracted chat state management and transmission logic into a specialized `useChat` hook in `src/hooks/useChat.ts`. This decouples the UI from the AI service orchestration and simplifies `App.tsx`.
+
+### Changed
+- **Animation Library Migration**: Migrated from the legacy `framer-motion` package to the unified `motion/react` library, aligning with the latest React 19 standards and optimizing bundle size.
+- **Version Bump**: Incremented project version to 1.4.7.
+
 ## [1.4.6] - 2026-04-14
 
 ### Fixed
