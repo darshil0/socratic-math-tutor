@@ -1,12 +1,14 @@
+export interface MessagePart {
+  text?: string;
+  inlineData?: {
+    data: string;
+    mimeType: string;
+  };
+}
+
 export interface Message {
   role: "user" | "model";
-  parts: {
-    text?: string;
-    inlineData?: {
-      data: string;
-      mimeType: string
-    }
-  }[];
+  parts: MessagePart[];
 }
 
 export interface ExampleProblem {

@@ -1,13 +1,21 @@
 import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Image as ImageIcon, Info, Camera, GraduationCap, Loader2 } from "lucide-react";
-import { Message } from "../../types";
-import { ChatMessage } from "./ChatMessage";
+import { Message } from "@/types";
+import { ChatMessage } from "@/components/chat/ChatMessage";
 
 interface ChatAreaProps {
   messages: Message[];
   isLoading: boolean;
   onUploadClick: () => void;
+}
+
+// Derive a stable key for each message from its role and a snippet of its first text part.
+// This avoids the index-as-key anti-pattern which causes AnimatePresence to mis-animate
+// when messages are inserted or removed mid-list.
+function getMessageKey(msg: Message, idx: number): string {
+  const snippet = msg.parts[0]?.text?.slice(0, 32) ?? msg.parts[0]?.inlineData?.mimeType ?? "";
+  return `${msg.role}-${idx}-${snippet}`;
 }
 
 export function ChatArea({ messages, isLoading, onUploadClick }: ChatAreaProps) {
@@ -20,12 +28,12 @@ export function ChatArea({ messages, isLoading, onUploadClick }: ChatAreaProps) 
   }, [messages, isLoading]);
 
   return (
-    <div 
+    <div
       ref={scrollRef}
       className="flex-1 overflow-y-auto p-6 space-y-8 scroll-smooth"
     >
       {messages.length === 0 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center h-full text-center space-y-6 max-w-md mx-auto"
@@ -37,7 +45,7 @@ export function ChatArea({ messages, isLoading, onUploadClick }: ChatAreaProps) 
           <p className="text-[#5c5751] leading-relaxed">
             I'm here to help you understand math, not just solve it. Upload a photo of a problem you're working on, and we'll walk through it together.
           </p>
-          
+
           <div className="bg-white/50 p-4 rounded-2xl border border-[#e8e2d9] text-left space-y-2">
             <h3 className="text-xs font-bold text-[#5A5A40] uppercase tracking-widest flex items-center gap-2">
               <Info size={14} />
@@ -51,7 +59,7 @@ export function ChatArea({ messages, isLoading, onUploadClick }: ChatAreaProps) 
             </ul>
           </div>
 
-          <button 
+          <button
             onClick={onUploadClick}
             className="px-8 py-3 bg-[#5A5A40] text-white rounded-full hover:bg-[#4a4a34] transition-all shadow-md flex items-center gap-2 font-medium"
           >
@@ -63,10 +71,10 @@ export function ChatArea({ messages, isLoading, onUploadClick }: ChatAreaProps) 
 
       <AnimatePresence mode="popLayout">
         {messages.map((msg, idx) => (
-          <ChatMessage key={idx} message={msg} />
+          <ChatMessage key={getMessageKey(msg, idx)} message={msg} />
         ))}
       </AnimatePresence>
-      
+
       {isLoading && (
         <div className="flex justify-start">
           <div className="flex gap-4 items-center">

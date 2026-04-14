@@ -17,19 +17,21 @@ interface ChatInputProps {
   selectedImage: SelectedImage | null;
 }
 
-export function ChatInput({ 
-  input, 
-  setInput, 
-  isLoading, 
-  previewUrl, 
+export function ChatInput({
+  input,
+  setInput,
+  isLoading,
+  previewUrl,
   onCameraClick,
-  onClearImage, 
+  onClearImage,
   onSend,
   selectedImage
 }: ChatInputProps) {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !isLoading) {
+    // Send on Enter, but not Shift+Enter (allow newline on Shift+Enter in future textarea upgrade)
+    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+      e.preventDefault();
       onSend();
     }
   };
@@ -39,19 +41,19 @@ export function ChatInput({
       <div className="max-w-3xl mx-auto space-y-4">
         <AnimatePresence>
           {previewUrl && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 10 }}
               className="relative inline-block"
             >
-              <img 
-                src={previewUrl} 
-                alt="Preview" 
+              <img
+                src={previewUrl}
+                alt="Preview"
                 className="h-32 w-auto rounded-xl border-4 border-white shadow-lg object-cover"
                 referrerPolicy="no-referrer"
               />
-              <button 
+              <button
                 onClick={onClearImage}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
                 disabled={isLoading}
@@ -63,7 +65,7 @@ export function ChatInput({
         </AnimatePresence>
 
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={onCameraClick}
             className="p-3 text-[#5c5751] hover:bg-[#f5f2ed] rounded-full transition-colors group relative"
             title="Upload image"
@@ -74,10 +76,10 @@ export function ChatInput({
               Best for Algebra & Calculus. Ensure clear lighting and handwriting.
             </div>
           </button>
-          
+
           <div className="flex-1 relative">
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -85,7 +87,7 @@ export function ChatInput({
               className="w-full px-6 py-4 bg-[#f5f2ed] border-none rounded-full focus:ring-2 focus:ring-[#5A5A40] transition-all outline-none text-[#2d2a26]"
               disabled={isLoading}
             />
-            <button 
+            <button
               onClick={() => onSend()}
               disabled={isLoading || (!input.trim() && !selectedImage)}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#5A5A40] text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#4a4a34] transition-all shadow-sm"
@@ -94,9 +96,9 @@ export function ChatInput({
             </button>
           </div>
         </div>
-        
+
         <div className="flex justify-center gap-4">
-          <button 
+          <button
             onClick={() => onSend("Why did we do that?")}
             className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
             disabled={isLoading}
@@ -104,7 +106,7 @@ export function ChatInput({
             <ChevronRight size={14} />
             "Why did we do that?"
           </button>
-          <button 
+          <button
             onClick={() => onSend("Can you give me a hint?")}
             className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
             disabled={isLoading}
