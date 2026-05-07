@@ -28,10 +28,18 @@ export function ChatInput({
   selectedImage
 }: ChatInputProps) {
 
+  const canSend = (input.trim().length > 0) || (selectedImage !== null && selectedImage.data && selectedImage.mimeType);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // Send on Enter, but not Shift+Enter (allow newline on Shift+Enter in future textarea upgrade)
-    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+    if (e.key === "Enter" && !e.shiftKey && !isLoading && canSend) {
       e.preventDefault();
+      onSend();
+    }
+  };
+
+  const handleSendClick = () => {
+    if (canSend && !isLoading) {
       onSend();
     }
   };
@@ -57,6 +65,7 @@ export function ChatInput({
                 onClick={onClearImage}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
                 disabled={isLoading}
+                aria-label="Remove image"
               >
                 <X size={16} />
               </button>
@@ -70,6 +79,7 @@ export function ChatInput({
             className="p-3 text-[#5c5751] hover:bg-[#f5f2ed] rounded-full transition-colors group relative"
             title="Upload image"
             disabled={isLoading}
+            aria-label="Upload math problem image"
           >
             <Camera size={24} />
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-[#2d2a26] text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
@@ -84,13 +94,16 @@ export function ChatInput({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={selectedImage ? "Ask about this problem..." : "Type your message or ask 'Why?'"}
-              className="w-full px-6 py-4 bg-[#f5f2ed] border-none rounded-full focus:ring-2 focus:ring-[#5A5A40] transition-all outline-none text-[#2d2a26]"
+              className="w-full px-6 py-4 bg-[#f5f2ed] border-none rounded-full focus:ring-2 focus:ring-[#5A5A40] transition-all outline-none text-[#2d2a26] disabled:opacity-60"
               disabled={isLoading}
+              aria-label="Message input"
             />
             <button
-              onClick={() => onSend()}
-              disabled={isLoading || (!input.trim() && !selectedImage)}
+              onClick={handleSendClick}
+              disabled={isLoading || !canSend}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#5A5A40] text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#4a4a34] transition-all shadow-sm"
+              aria-label="Send message"
+              title={!canSend ? "Enter text or upload an image" : "Send message"}
             >
               <Send size={20} />
             </button>
@@ -100,16 +113,18 @@ export function ChatInput({
         <div className="flex justify-center gap-4">
           <button
             onClick={() => onSend("Why did we do that?")}
-            className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
+            className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors disabled:opacity-50"
             disabled={isLoading}
+            aria-label="Ask why quick action"
           >
             <ChevronRight size={14} />
             "Why did we do that?"
           </button>
           <button
             onClick={() => onSend("Can you give me a hint?")}
-            className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors"
+            className="text-xs font-medium text-[#8c867e] hover:text-[#5A5A40] flex items-center gap-1 transition-colors disabled:opacity-50"
             disabled={isLoading}
+            aria-label="Ask for hint quick action"
           >
             <ChevronRight size={14} />
             "Can you give me a hint?"
