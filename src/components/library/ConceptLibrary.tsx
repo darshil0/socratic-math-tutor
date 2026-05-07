@@ -32,6 +32,7 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
   const [concepts, setConcepts] = useState<Concept[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null);
+  const [searchError, setSearchError] = useState<string | null>(null);
   
   // Interactive state
   const [analogyStep, setAnalogyStep] = useState(0);
@@ -44,13 +45,32 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
   });
 
   const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim()) {
+      setSearchError("Please enter a search term");
+      return;
+    }
+    
     setIsSearching(true);
+    setSearchError(null);
+    
     try {
       const results = await searchConcepts(searchQuery);
+      
+      // Validate results
+      if (!Array.isArray(results)) {
+        throw new Error("Invalid search results format");
+      }
+      
+      if (results.length === 0) {
+        setSearchError("No concepts found. Try a different search term.");
+      }
+      
       setConcepts(results);
     } catch (error) {
-      console.error("Search error:", error);
+      const errorMsg = error instanceof Error ? error.message : "Search failed";
+      console.error("Search error:", errorMsg);
+      setSearchError(`Error: ${errorMsg}`);
+      setConcepts([]);
     } finally {
       setIsSearching(false);
     }
@@ -64,24 +84,54 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
   };
 
   const handleSelectConcept = (concept: Concept) => {
+    // Validate concept structure
+    if (!concept.id || !concept.title || !Array.isArray(concept.interactiveQuiz) || !Array.isArray(concept.interactiveAnalogy)) {
+      console.error("Invalid concept structure:", concept);
+      setSearchError("Failed to load concept. Please try again.");
+      return;
+    }
+    
     setSelectedConcept(concept);
+    setSearchError(null);
     resetInteractive();
   };
 
   const handleQuizAnswer = (optionIdx: number) => {
-    if (!selectedConcept) return;
+    if (!selectedConcept) {
+      console.error("No concept selected for quiz");
+      return;
+    }
+    
+    // Boundary check
+    if (quizState.questionIdx >= selectedConcept.interactiveQuiz.length) {
+      console.error("Quiz question index out of bounds");
+      return;
+    }
+    
     const currentQuestion = selectedConcept.interactiveQuiz[quizState.questionIdx];
+    
+    // Validate correct index
+    if (currentQuestion.correctIndex < 0 || currentQuestion.correctIndex >= currentQuestion.options.length) {
+      console.error("Invalid correct index in quiz question");
+      return;
+    }
+    
     const isCorrect = optionIdx === currentQuestion.correctIndex;
     setQuizState(prev => ({ ...prev, selectedOption: optionIdx, isCorrect }));
   };
 
   const nextQuizQuestion = () => {
-    setShowQuizHint(false);
-    setQuizState(prev => ({
-      questionIdx: prev.questionIdx + 1,
-      selectedOption: null,
-      isCorrect: null
-    }));
+    if (!selectedConcept) return;
+    
+    const nextIdx = quizState.questionIdx + 1;
+    if (nextIdx <= selectedConcept.interactiveQuiz.length) {
+      setShowQuizHint(false);
+      setQuizState({
+        questionIdx: nextIdx,
+        selectedOption: null,
+        isCorrect: null
+      });
+    }
   };
 
   return (
@@ -149,161 +199,167 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
               </div>
 
               {/* Interactive Analogy Section */}
-              <div className="mb-12 p-6 bg-[#fcfaf7] rounded-2xl border border-[#e8e2d9]">
-                <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
-                  <BookOpen size={20} className="text-[#5A5A40]" />
-                  Interactive Analogy
-                </h4>
-                <div className="space-y-4">
-                  <div className="flex gap-2 mb-4">
-                    {selectedConcept.interactiveAnalogy.map((_, i) => (
-                      <div 
-                        key={i} 
-                        className={`h-1 flex-1 rounded-full transition-colors ${i <= analogyStep ? "bg-[#5A5A40]" : "bg-[#e8e2d9]"}`}
-                      />
-                    ))}
-                  </div>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={analogyStep}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      className="min-h-[120px]"
-                    >
-                      <h5 className="font-bold text-[#2d2a26] mb-2">{selectedConcept.interactiveAnalogy[analogyStep].title}</h5>
-                      <p className="text-[#5c5751] leading-relaxed">{selectedConcept.interactiveAnalogy[analogyStep].description}</p>
-                    </motion.div>
-                  </AnimatePresence>
-                  <div className="flex justify-between pt-4">
-                    <button 
-                      disabled={analogyStep === 0}
-                      onClick={() => setAnalogyStep(prev => prev - 1)}
-                      className="px-4 py-2 text-sm font-medium text-[#5A5A40] disabled:opacity-30"
-                    >
-                      Previous
-                    </button>
-                    <button 
-                      disabled={analogyStep === selectedConcept.interactiveAnalogy.length - 1}
-                      onClick={() => setAnalogyStep(prev => prev + 1)}
-                      className="px-6 py-2 bg-[#5A5A40] text-white rounded-full text-sm font-medium hover:bg-[#4a4a34] transition-all disabled:opacity-30"
-                    >
-                      Next Step
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Quiz Section */}
-              <div className="mb-12 p-6 bg-white rounded-2xl border-2 border-[#f5f2ed]">
-                <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
-                  <GraduationCap size={20} className="text-[#5A5A40]" />
-                  Check Your Understanding
-                </h4>
-                {quizState.questionIdx < selectedConcept.interactiveQuiz.length ? (
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-start gap-4">
-                      <p className="font-medium text-[#2d2a26]">{selectedConcept.interactiveQuiz[quizState.questionIdx].question}</p>
-                      <button 
-                        onClick={() => setShowQuizHint(!showQuizHint)}
-                        className="flex-shrink-0 p-2 text-[#8c867e] hover:text-[#5A5A40] transition-colors"
-                        title="Get a hint"
-                      >
-                        <Info size={18} />
-                      </button>
-                    </div>
-
-                    <AnimatePresence>
-                      {showQuizHint && (
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          className="p-3 bg-[#f5f2ed] rounded-lg text-xs text-[#5c5751] italic border border-[#e8e2d9]"
-                        >
-                          <strong>Hint:</strong> {selectedConcept.interactiveQuiz[quizState.questionIdx].hint}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    <div className="grid gap-3">
-                      {selectedConcept.interactiveQuiz[quizState.questionIdx].options.map((option, i) => (
-                        <button
-                          key={i}
-                          disabled={quizState.selectedOption !== null}
-                          onClick={() => handleQuizAnswer(i)}
-                          className={`p-4 rounded-xl border text-left transition-all ${
-                            quizState.selectedOption === i
-                              ? quizState.isCorrect ? "bg-green-50 border-green-500 text-green-700" : "bg-red-50 border-red-500 text-red-700"
-                              : "bg-white border-[#e8e2d9] hover:border-[#5A5A40]"
-                          }`}
-                        >
-                          {option}
-                        </button>
+              {selectedConcept.interactiveAnalogy && selectedConcept.interactiveAnalogy.length > 0 && (
+                <div className="mb-12 p-6 bg-[#fcfaf7] rounded-2xl border border-[#e8e2d9]">
+                  <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
+                    <BookOpen size={20} className="text-[#5A5A40]" />
+                    Interactive Analogy
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex gap-2 mb-4">
+                      {selectedConcept.interactiveAnalogy.map((_, i) => (
+                        <div 
+                          key={i} 
+                          className={`h-1 flex-1 rounded-full transition-colors ${i <= analogyStep ? "bg-[#5A5A40]" : "bg-[#e8e2d9]"}`}
+                        />
                       ))}
                     </div>
-                    {quizState.selectedOption !== null && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 rounded-xl ${quizState.isCorrect ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={analogyStep}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        className="min-h-[120px]"
                       >
-                        <p className="text-sm font-bold mb-1">{quizState.isCorrect ? "Correct!" : "Not quite..."}</p>
-                        <p className="text-sm">{selectedConcept.interactiveQuiz[quizState.questionIdx].explanation}</p>
-                        <button 
-                          onClick={nextQuizQuestion}
-                          className="mt-4 px-6 py-2 bg-[#5A5A40] text-white rounded-full text-xs font-bold uppercase tracking-widest"
-                        >
-                          {quizState.questionIdx === selectedConcept.interactiveQuiz.length - 1 ? "Finish Quiz" : "Next Question"}
-                        </button>
+                        <h5 className="font-bold text-[#2d2a26] mb-2">{selectedConcept.interactiveAnalogy[analogyStep]?.title || "Loading..."}</h5>
+                        <p className="text-[#5c5751] leading-relaxed">{selectedConcept.interactiveAnalogy[analogyStep]?.description || ""}</p>
                       </motion.div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <GraduationCap size={32} />
-                    </div>
-                    <h5 className="font-serif text-2xl text-[#2d2a26] mb-2">Quiz Complete!</h5>
-                    <p className="text-[#5c5751] mb-6">You've mastered the basics of this concept.</p>
-                    <button 
-                      onClick={() => setQuizState({ questionIdx: 0, selectedOption: null, isCorrect: null })}
-                      className="px-6 py-2 border border-[#5A5A40] text-[#5A5A40] rounded-full text-sm font-medium hover:bg-[#f5f2ed] transition-all"
-                    >
-                      Retake Quiz
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Example Problems Section */}
-              <div className="mt-12 pt-8 border-t border-[#e8e2d9]">
-                <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
-                  <ChevronRight size={20} className="text-[#5A5A40]" />
-                  Practice Problems
-                </h4>
-                <div className="grid gap-4">
-                  {selectedConcept.exampleProblems.map((ex, i) => (
-                    <div key={i} className="p-5 bg-[#fcfaf7] rounded-2xl border border-[#e8e2d9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div>
-                        <h5 className="font-medium text-[#2d2a26] mb-1">{ex.title}</h5>
-                        <div className="text-sm text-[#5c5751] font-mono bg-white/50 p-2 rounded border border-[#e8e2d9]/50">
-                          <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
-                            {ex.problem}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
+                    </AnimatePresence>
+                    <div className="flex justify-between pt-4">
                       <button 
-                        onClick={() => onTryProblem(ex.problem)}
-                        className="whitespace-nowrap px-4 py-2 bg-[#5A5A40] text-white rounded-full text-sm font-medium hover:bg-[#4a4a34] transition-all shadow-sm flex items-center justify-center gap-2"
+                        disabled={analogyStep === 0}
+                        onClick={() => setAnalogyStep(prev => Math.max(0, prev - 1))}
+                        className="px-4 py-2 text-sm font-medium text-[#5A5A40] disabled:opacity-30"
                       >
-                        Try in Chat
-                        <Send size={14} />
+                        Previous
+                      </button>
+                      <button 
+                        disabled={analogyStep === selectedConcept.interactiveAnalogy.length - 1}
+                        onClick={() => setAnalogyStep(prev => Math.min(selectedConcept.interactiveAnalogy.length - 1, prev + 1))}
+                        className="px-6 py-2 bg-[#5A5A40] text-white rounded-full text-sm font-medium hover:bg-[#4a4a34] transition-all disabled:opacity-30"
+                      >
+                        Next Step
                       </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Interactive Quiz Section */}
+              {selectedConcept.interactiveQuiz && selectedConcept.interactiveQuiz.length > 0 && (
+                <div className="mb-12 p-6 bg-white rounded-2xl border-2 border-[#f5f2ed]">
+                  <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
+                    <GraduationCap size={20} className="text-[#5A5A40]" />
+                    Check Your Understanding
+                  </h4>
+                  {quizState.questionIdx < selectedConcept.interactiveQuiz.length ? (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-start gap-4">
+                        <p className="font-medium text-[#2d2a26]">{selectedConcept.interactiveQuiz[quizState.questionIdx]?.question || ""}</p>
+                        <button 
+                          onClick={() => setShowQuizHint(!showQuizHint)}
+                          className="flex-shrink-0 p-2 text-[#8c867e] hover:text-[#5A5A40] transition-colors"
+                          title="Get a hint"
+                        >
+                          <Info size={18} />
+                        </button>
+                      </div>
+
+                      <AnimatePresence>
+                        {showQuizHint && (
+                          <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="p-3 bg-[#f5f2ed] rounded-lg text-xs text-[#5c5751] italic border border-[#e8e2d9]"
+                          >
+                            <strong>Hint:</strong> {selectedConcept.interactiveQuiz[quizState.questionIdx]?.hint || ""}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      <div className="grid gap-3">
+                        {selectedConcept.interactiveQuiz[quizState.questionIdx]?.options?.map((option, i) => (
+                          <button
+                            key={i}
+                            disabled={quizState.selectedOption !== null}
+                            onClick={() => handleQuizAnswer(i)}
+                            className={`p-4 rounded-xl border text-left transition-all ${
+                              quizState.selectedOption === i
+                                ? quizState.isCorrect ? "bg-green-50 border-green-500 text-green-700" : "bg-red-50 border-red-500 text-red-700"
+                                : "bg-white border-[#e8e2d9] hover:border-[#5A5A40]"
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        )) || null}
+                      </div>
+                      {quizState.selectedOption !== null && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`p-4 rounded-xl ${quizState.isCorrect ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}
+                        >
+                          <p className="text-sm font-bold mb-1">{quizState.isCorrect ? "Correct!" : "Not quite..."}</p>
+                          <p className="text-sm">{selectedConcept.interactiveQuiz[quizState.questionIdx]?.explanation || ""}</p>
+                          <button 
+                            onClick={nextQuizQuestion}
+                            className="mt-4 px-6 py-2 bg-[#5A5A40] text-white rounded-full text-xs font-bold uppercase tracking-widest"
+                          >
+                            {quizState.questionIdx === selectedConcept.interactiveQuiz.length - 1 ? "Finish Quiz" : "Next Question"}
+                          </button>
+                        </motion.div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <GraduationCap size={32} />
+                      </div>
+                      <h5 className="font-serif text-2xl text-[#2d2a26] mb-2">Quiz Complete!</h5>
+                      <p className="text-[#5c5751] mb-6">You've mastered the basics of this concept.</p>
+                      <button 
+                        onClick={() => setQuizState({ questionIdx: 0, selectedOption: null, isCorrect: null })}
+                        className="px-6 py-2 border border-[#5A5A40] text-[#5A5A40] rounded-full text-sm font-medium hover:bg-[#f5f2ed] transition-all"
+                      >
+                        Retake Quiz
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Example Problems Section */}
+              {selectedConcept.exampleProblems && selectedConcept.exampleProblems.length > 0 && (
+                <div className="mt-12 pt-8 border-t border-[#e8e2d9]">
+                  <h4 className="font-serif text-xl text-[#2d2a26] mb-4 flex items-center gap-2">
+                    <ChevronRight size={20} className="text-[#5A5A40]" />
+                    Practice Problems
+                  </h4>
+                  <div className="grid gap-4">
+                    {selectedConcept.exampleProblems.map((ex, i) => (
+                      <div key={i} className="p-5 bg-[#fcfaf7] rounded-2xl border border-[#e8e2d9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <h5 className="font-medium text-[#2d2a26] mb-1">{ex.title}</h5>
+                          <div className="text-sm text-[#5c5751] font-mono bg-white/50 p-2 rounded border border-[#e8e2d9]/50">
+                            <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
+                              {ex.problem}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => onTryProblem(ex.problem)}
+                          className="whitespace-nowrap px-4 py-2 bg-[#5A5A40] text-white rounded-full text-sm font-medium hover:bg-[#4a4a34] transition-all shadow-sm flex items-center justify-center gap-2"
+                        >
+                          Try in Chat
+                          <Send size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         ) : (
@@ -327,6 +383,16 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
               </button>
             </div>
 
+            {searchError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"
+              >
+                {searchError}
+              </motion.div>
+            )}
+
             <div className="grid gap-4">
               {concepts.map((concept) => (
                 <button
@@ -344,7 +410,7 @@ export function ConceptLibrary({ onClose, onTryProblem }: ConceptLibraryProps) {
                   </div>
                 </button>
               ))}
-              {concepts.length === 0 && !isSearching && (
+              {concepts.length === 0 && !isSearching && !searchError && (
                 <div className="text-center py-12 text-[#8c867e]">
                   <BookOpen size={48} className="mx-auto mb-4 opacity-20" />
                   <p>Search for a topic to explore our library of mathematical concepts.</p>
