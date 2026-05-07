@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 import { isApiKeyConfigured } from "@/services/GeminiService";
 import { ConceptLibrary } from "@/components/library/ConceptLibrary";
 import { useChat } from "@/hooks/useChat";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 // Components
 import { Header } from "@/components/layout/Header";
@@ -20,34 +21,19 @@ export default function App() {
     clearSession,
   } = useChat();
 
-  const [selectedImage, setSelectedImage] = useState<{ data: string; mimeType: string } | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const {
+    selectedImage,
+    previewUrl,
+    fileInputRef,
+    handleImageUpload,
+    clearImage,
+  } = useImageUpload();
+
   const [showLibrary, setShowLibrary] = useState(false);
   const [isConfigured, setIsConfigured] = useState(true);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     setIsConfigured(isApiKeyConfigured());
-  }, []);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64Data = (reader.result as string).split(",")[1];
-        setSelectedImage({ data: base64Data, mimeType: file.type });
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const clearImage = useCallback(() => {
-    setSelectedImage(null);
-    setPreviewUrl(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
   const onSend = useCallback(async (overrideInput?: string) => {
@@ -61,9 +47,9 @@ export default function App() {
     }, 300);
   }, [onSend]);
 
-  const onClearSession = () => {
+  const onClearSession = useCallback(() => {
     clearSession(clearImage);
-  };
+  }, [clearSession, clearImage]);
 
   return (
     <div className="relative flex flex-col h-screen max-w-4xl mx-auto bg-[#fcfaf7] font-sans">

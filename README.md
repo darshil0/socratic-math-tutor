@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.4.8** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.5.0** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
@@ -146,21 +146,17 @@ All messages and images are stored locally in your browser. Clearing the cache o
 
 ---
 
-## What's New in v1.4.8
+## What's New in v1.5.0
 
-This release focuses on stability, error handling, and data validation across the entire application.
+This release focuses on architectural restructuring, accessibility enhancements, and codebase synchronization.
 
-**Input Validation & Type Safety:** All user inputs—text messages, images, and search queries—are now validated against strict type guards. Invalid data is rejected early with clear error messages rather than causing silent failures or crashes downstream.
+**Architectural Restructuring:** Extracted image handling and state management from `App.tsx` into a dedicated `useImageUpload` hook, improving modularity and reducing component complexity.
 
-**Enhanced Error Messages:** The application now differentiates between four error types: API configuration errors, validation failures, network timeouts, and generic errors. Users receive specific, actionable feedback that helps them understand what went wrong and how to fix it.
+**Accessibility Enhancements:** Added descriptive `aria-label` attributes to key interactive elements in the Header, ensuring a better experience for screen reader users.
 
-**Image Upload Robustness:** Image uploads now validate that both the base64 data and MIME type are present and valid before sending. The send button correctly reflects whether the user can proceed (text provided OR valid image provided), preventing confusing states.
+**Performance Optimization:** Memoized core session management handlers using `useCallback` to prevent unnecessary re-renders of layout components.
 
-**Concept Library Stability:** The Concept Library now safely handles edge cases including empty concept arrays, malformed quiz questions, out-of-bounds array indices, and missing optional properties. The user is notified of issues via clear error messages instead of experiencing silent failures.
-
-**Comprehensive Logging:** Service layers now log detailed error context including failed queries, parse errors, validation failures, and API responses. This aids in debugging and understanding what happened when things go wrong.
-
-**API Response Validation:** Responses from the Gemini API are validated against expected schemas before being used. Invalid or malformed responses are logged with context and filtered out cleanly rather than causing runtime errors.
+**Version Synchronization:** Standardized project versioning to 1.5.0 across all metadata files (`package.json`, `package-lock.json`, `README.md`, `CHANGELOG.md`), resolving historical discrepancies.
 
 ---
 
