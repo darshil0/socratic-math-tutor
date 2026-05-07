@@ -12,21 +12,34 @@ export function isApiKeyConfigured() {
 export async function* getSocraticResponse(
   history: Message[]
 ): AsyncGenerator<string> {
+  // Validate input history
+  if (!Array.isArray(history) || history.length === 0) {
+    throw new Error("Message history is required and must not be empty");
+  }
+
   try {
-    const contents = history.map((msg) => ({
-    role: msg.role === "model" ? "model" : "user",
-    parts: msg.parts.map((p) => {
-      if (p.inlineData) {
-        return {
-          inlineData: {
-            data: p.inlineData.data,
-            mimeType: p.inlineData.mimeType,
-          },
-        } as Part;
+    const contents = history.map((msg) => {
+      if (!msg.role || !Array.isArray(msg.parts)) {
+        throw new Error("Invalid message structure: missing role or parts");
       }
-      return { text: p.text || "" } as Part;
-    }),
-  }));
+      return {
+        role: msg.role === "model" ? "model" : "user",
+        parts: msg.parts.map((p) => {
+          if (p.inlineData) {
+            if (!p.inlineData.data || !p.inlineData.mimeType) {
+              throw new Error("Invalid inline data: missing data or mimeType");
+            }
+            return {
+              inlineData: {
+                data: p.inlineData.data,
+                mimeType: p.inlineData.mimeType,
+              },
+            } as Part;
+          }
+          return { text: p.text || "" } as Part;
+        }),
+      };
+    });
 
     const responseStream = await ai.models.generateContentStream({
       model: "gemini-2.0-pro-exp-02-05",
@@ -46,7 +59,8 @@ export async function* getSocraticResponse(
       }
     }
   } catch (error) {
-    console.error("GeminiService error:", error);
-    throw error;
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("GeminiService error:", errorMsg);
+    throw new Error(`Socratic response failed: ${errorMsg}`);
   }
 }
