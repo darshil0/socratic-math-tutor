@@ -1,12 +1,14 @@
 # Socratic Math Tutor
 
-> **Version 1.4.7** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.4.8** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
 ## Overview
 
 Socratic Math Tutor helps students genuinely understand mathematics rather than just arriving at answers. Upload a photo of any problem and the tutor will walk you through it step by step, explaining the reasoning behind every move. Ask "Why did we do that?" at any point and you'll get a deep conceptual explanation, complete with analogies, formula breakdowns, and interactive examples.
+
+This version includes comprehensive input validation, enhanced error handling with user-friendly feedback, and improved type safety throughout the application, ensuring a robust and reliable tutoring experience.
 
 ---
 
@@ -28,6 +30,8 @@ Socratic Math Tutor helps students genuinely understand mathematics rather than 
 
 **API Key Guard** — If the Gemini API key is missing on startup, a friendly overlay walks you through setup before anything else loads.
 
+**Robust Error Handling** — Clear, contextual error messages differentiate between API errors, validation failures, and network timeouts, helping you understand what went wrong and how to fix it.
+
 ---
 
 ## Tech Stack
@@ -40,6 +44,7 @@ Socratic Math Tutor helps students genuinely understand mathematics rather than 
 | Animations | Motion (Framer Motion v12) |
 | Math Rendering | React-Markdown + Remark-Math + Rehype-KaTeX + KaTeX |
 | Icons | Lucide-React |
+| Validation | Custom type guards with runtime validation |
 
 ---
 
@@ -52,9 +57,10 @@ src/
 │   ├── layout/       # Header
 │   ├── library/      # ConceptLibrary
 │   └── modals/       # ApiKeyModal
-├── hooks/            # useLocalStorage
+├── hooks/            # useLocalStorage, useChat
 ├── services/         # GeminiService, ConceptService
-├── types/            # Shared TypeScript interfaces
+├── types/            # Shared TypeScript interfaces + type guards
+├── constants/        # Centralized prompts and configuration
 ├── App.tsx
 ├── main.tsx
 └── index.css
@@ -108,6 +114,20 @@ alias: { "@": path.resolve(__dirname, "src") }
 ```
 This aligns with the `tsconfig.json` mapping of `"@/*" → "src/*"`.
 
+### Validation Errors on Message Send
+If you see a validation error when sending a message or image:
+1. Ensure the image file is in a supported format (JPEG, PNG, GIF, WebP, HEIC, HEIF).
+2. Verify the image is not corrupted by opening it in another application.
+3. Check that your message contains either text or a valid image (not both empty).
+4. If uploading an image, ensure it has loaded completely before sending.
+
+### Concept Library Search Returns No Results
+If a concept search returns no results or an error:
+1. Try a shorter or more specific search term (e.g., "Derivatives" instead of "How to find derivatives of polynomials").
+2. Ensure your internet connection is stable and the API key has quota remaining.
+3. Check the browser console for detailed error messages.
+4. Try a different search term; some concepts may not be available in the knowledge base.
+
 ### Port Conflicts
 The app defaults to port `3000`. If this port is in use, Vite will attempt to use another. You can force a port in `package.json`:
 ```bash
@@ -118,15 +138,68 @@ npm run dev -- --port 3001
 
 ## Usage Notes
 
-- The input field and quick-action buttons are disabled while the AI is responding, preventing duplicate submissions.
-- Pressing **Enter** sends the message; **Shift+Enter** is reserved for future multiline input support and does not trigger a send.
-- On mobile, the file input uses `capture="environment"` to open the rear camera directly.
-- The Concept Library uses `gemini-2.0-flash` for fast, structured JSON concept generation.
-- Chat history is stored in the browser's `localStorage`. Click the trash icon in the header to clear your session.
-- If `GEMINI_API_KEY` is missing at startup, an overlay will block the UI and guide you through configuration. Restart the dev server after adding the key.
+The input field and quick-action buttons are disabled while the AI is responding, preventing duplicate submissions. Pressing **Enter** sends the message; **Shift+Enter** is reserved for future multiline input support and does not trigger a send. On mobile, the file input uses `capture="environment"` to open the rear camera directly.
+
+The Concept Library uses `gemini-2.0-flash` for fast, structured JSON concept generation. Chat history is stored in the browser's `localStorage`. Click the trash icon in the header to clear your session. If `GEMINI_API_KEY` is missing at startup, an overlay will block the UI and guide you through configuration. Restart the dev server after adding the key.
+
+All messages and images are stored locally in your browser. Clearing the cache or localStorage will erase your chat history. Images are encoded in base64 and included directly in the chat history, ensuring they persist across page refreshes until you explicitly clear the session.
+
+---
+
+## What's New in v1.4.8
+
+This release focuses on stability, error handling, and data validation across the entire application.
+
+**Input Validation & Type Safety:** All user inputs—text messages, images, and search queries—are now validated against strict type guards. Invalid data is rejected early with clear error messages rather than causing silent failures or crashes downstream.
+
+**Enhanced Error Messages:** The application now differentiates between four error types: API configuration errors, validation failures, network timeouts, and generic errors. Users receive specific, actionable feedback that helps them understand what went wrong and how to fix it.
+
+**Image Upload Robustness:** Image uploads now validate that both the base64 data and MIME type are present and valid before sending. The send button correctly reflects whether the user can proceed (text provided OR valid image provided), preventing confusing states.
+
+**Concept Library Stability:** The Concept Library now safely handles edge cases including empty concept arrays, malformed quiz questions, out-of-bounds array indices, and missing optional properties. The user is notified of issues via clear error messages instead of experiencing silent failures.
+
+**Comprehensive Logging:** Service layers now log detailed error context including failed queries, parse errors, validation failures, and API responses. This aids in debugging and understanding what happened when things go wrong.
+
+**API Response Validation:** Responses from the Gemini API are validated against expected schemas before being used. Invalid or malformed responses are logged with context and filtered out cleanly rather than causing runtime errors.
 
 ---
 
 ## Changelog
 
-See [CHANGELOG.md](./CHANGELOG.md) for the full release history.
+See [CHANGELOG.md](./CHANGELOG.md) for the full release history and detailed version notes.
+
+---
+
+## Development Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start the development server on port 3000 |
+| `npm run build` | Build the application for production |
+| `npm run preview` | Preview the production build locally |
+| `npm run clean` | Remove the `dist` directory |
+| `npm run lint` | Run TypeScript type checking |
+
+---
+
+## Contributing
+
+When adding new features or fixing bugs, please ensure:
+
+1. All new code passes TypeScript strict mode (`npm run lint`).
+2. Error handling includes specific error messages with context.
+3. User-facing errors are written in clear, non-technical language.
+4. Type safety is maintained; avoid `any` casts where possible.
+5. Changes are logged in the CHANGELOG.md file.
+
+---
+
+## License
+
+This project is provided as-is for educational and tutoring purposes.
+
+---
+
+## Support & Feedback
+
+For issues, suggestions, or feedback, please refer to the troubleshooting section above or check the browser console for detailed error messages that may help diagnose issues.
