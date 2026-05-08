@@ -2,7 +2,7 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
-## [1.5.0] - 2026-05-08
+## [1.5.1] - 2026-05-08
 
 ### Added
 - **Accessibility Enhancements**: Added descriptive `aria-label` attributes to the "Clear Chat History" and "Concept Library" buttons in the Header, improving screen reader support.
@@ -10,7 +10,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 - **Documentation Improvements**: Updated `README.md` with Windows-compatible `.env` setup instructions and Node/npm troubleshooting guidance.
 
 ### Fixed
-- **Version Discrepancy**: Standardized the project version to 1.5.0 across `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`, resolving inconsistencies between 1.4.7 and 1.4.8.
+- **Version Discrepancy**: Standardized the project version to 1.5.1 across `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`, resolving inconsistencies between 1.4.7 and 1.4.8.
 
 ### Changed
 - **Architectural Restructuring**: Refactored `src/App.tsx` to use the new `useImageUpload` hook, reducing component bloat and improving code modularity.

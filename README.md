@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.5.0** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
+> **Version 1.5.1** — A compassionate, patient AI math tutor that guides students through complex problems one step at a time using the Socratic method.
 
 ---
 
@@ -164,7 +164,7 @@ All messages and images are stored locally in your browser. Clearing the cache o
 
 ---
 
-## What's New in v1.5.0
+## What's New in v1.5.1
 
 This release focuses on architectural restructuring, accessibility enhancements, and codebase synchronization.
 
@@ -174,7 +174,7 @@ This release focuses on architectural restructuring, accessibility enhancements,
 
 **Performance Optimization:** Memoized core session management handlers using `useCallback` to prevent unnecessary re-renders of layout components.
 
-**Version Synchronization:** Standardized project versioning to 1.5.0 across all metadata files (`package.json`, `package-lock.json`, `README.md`, `CHANGELOG.md`), resolving historical discrepancies.
+**Version Synchronization:** Standardized project versioning to 1.5.1 across all metadata files (`package.json`, `package-lock.json`, `README.md`, `CHANGELOG.md`), resolving historical discrepancies.
 
 ---
 
