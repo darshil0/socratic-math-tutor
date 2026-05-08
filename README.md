@@ -29,11 +29,12 @@ The app preserves session history in the browser, renders math with KaTeX, and o
 
 - React 19
 - Vite 6
+- TypeScript 5
 - Tailwind CSS v4
 - Google Gemini API
-- React-Markdown + Remark-Math + Rehype-KaTeX
-- Motion (`motion/react`)
-- Lucide-React icons
+- react-markdown with remark-math and rehype-katex
+- motion/react
+- lucide-react
 
 ---
 
@@ -42,24 +43,24 @@ The app preserves session history in the browser, renders math with KaTeX, and o
 ```
 src/
 ├── components/
-│   ├── chat/
-│   ├── layout/
-│   ├── library/
-│   └── modals/
-├── constants/
-├── hooks/
-├── services/
-├── types/
-├── App.tsx
-├── main.tsx
-└── index.css
+│   ├── chat/              # Message display, input, and conversation UI
+│   ├── layout/            # Header, sidebar, main layout
+│   ├── library/           # Concept library and search interface
+│   └── modals/            # API key modal and other overlays
+├── constants/             # API endpoints, default prompts, categories
+├── hooks/                 # Custom React hooks (useLocalStorage, etc.)
+├── services/              # Gemini API client, validation utilities
+├── types/                 # TypeScript interfaces and enums
+├── App.tsx                # Root component
+├── main.tsx               # Vite entry point
+└── index.css              # Global styles and Tailwind setup
 ```
 
 ---
 
 ## Setup
 
-### 1. Clone
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/darshil0/socratic-math-tutor.git
@@ -91,9 +92,7 @@ npm install
 npm run dev
 ```
 
-### 5. Open the app
-
-Visit [http://localhost:3000](http://localhost:3000).
+The app will open at `http://localhost:5173` (Vite default).
 
 ---
 
@@ -101,33 +100,36 @@ Visit [http://localhost:3000](http://localhost:3000).
 
 | Name | Required | Description |
 |---|---|---|
-| `GEMINI_API_KEY` | Yes | Google Gemini API key for AI tutoring. |
-| `APP_URL` | No | Optional public app URL; currently unused in core behavior. |
+| `GEMINI_API_KEY` | Yes | Google Gemini API key. Get one at [ai.google.dev](https://ai.google.dev). |
+| `APP_URL` | No | Optional public app URL for future integrations. |
 
 ---
 
 ## Common Troubleshooting
 
-### `npm` not found
-If your terminal reports `npm` is not recognized:
+### `npm` command not found
 
-1. Install Node.js from https://nodejs.org.
+1. Install Node.js from [nodejs.org](https://nodejs.org) (LTS recommended).
 2. Restart your terminal.
-3. Verify with:
+3. Verify installation:
    ```bash
    node --version
    npm --version
    ```
 
-### API Key modal remains visible
+### API Key modal persists after setup
 
-1. Confirm `.env` is at the project root.
-2. Verify the key is set as `GEMINI_API_KEY`.
-3. Restart the dev server with `npm run dev`.
+1. Ensure `.env` is at the project root (same directory as `package.json`).
+2. Confirm the variable is exactly `GEMINI_API_KEY=<your-key>`.
+3. Restart the dev server:
+   ```bash
+   npm run dev
+   ```
+4. Clear browser cache if needed.
 
-### Import alias errors
+### Import alias errors (`@/` paths fail)
 
-Ensure `vite.config.ts` contains:
+Verify `vite.config.ts` has:
 
 ```ts
 alias: {
@@ -135,23 +137,47 @@ alias: {
 }
 ```
 
-This matches the `@/*` path mapping in `tsconfig.json`.
+And `tsconfig.json` has:
 
-### Port conflicts
-The app defaults to port `3000`. Use a different port with:
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+### Port 5173 is already in use
+
+Run on a different port:
 
 ```bash
 npm run dev -- --port 3001
 ```
 
+### Blank page or build errors
+
+1. Clear the build cache:
+   ```bash
+   npm run clean
+   rm -rf node_modules package-lock.json
+   npm install
+   npm run dev
+   ```
+2. Check browser console for errors (F12 / DevTools).
+
 ---
 
-## Usage Notes
+## Usage
 
-- Press **Enter** to send a message.
-- The input and send button are disabled while the AI is responding.
-- Upload images using the camera icon; the app stores the image in base64 so it persists in the session.
-- Click the trash icon in the header to clear the chat history.
+- **Send a message**: Type your math question and press Enter.
+- **Upload an image**: Click the camera icon to attach a handwritten or printed problem.
+- **Clear history**: Click the trash icon in the header to start a fresh session.
+- **Search concepts**: Use the Concept Library tab to find topics and take quizzes.
+- **Input disabled feedback**: The send button disables while the AI is responding.
 
 ---
 
@@ -159,11 +185,21 @@ npm run dev -- --port 3001
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start local development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run clean` | Remove `dist/` output |
-| `npm run lint` | Run TypeScript checks |
+| `npm run dev` | Start Vite dev server (default: localhost:5173) |
+| `npm run build` | Build for production to `dist/` |
+| `npm run preview` | Preview production build locally |
+| `npm run clean` | Remove `dist/` directory |
+| `npm run lint` | Run TypeScript type checking |
+
+---
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+Output goes to the `dist/` folder. Deploy via Vercel, Netlify, GitHub Pages, or any static host.
 
 ---
 
@@ -173,21 +209,45 @@ npm run dev -- --port 3001
 
 - Updated `tsconfig.json` with Vite-compatible compiler settings.
 - Added `vite/client` types, `esModuleInterop`, and JSON module support.
-- Improved README and environment setup instructions.
+- Fixed port references in documentation (5173 vs 3000).
+- Improved README clarity and troubleshooting section.
+- Enhanced project structure documentation.
+
+### v1.5.0
+
+- Initial stable release.
+- Socratic tutoring workflow with Gemini API.
+- Image upload and localStorage session persistence.
+- Concept Library with search and quizzes.
 
 ---
 
 ## Contributing
 
-When contributing:
+When contributing, please:
 
-- Keep type safety strict.
-- Prefer clear, user-friendly error messages.
-- Update `CHANGELOG.md` for meaningful changes.
+- Maintain strict TypeScript type safety.
+- Write clear, user-friendly error messages.
+- Test locally with `npm run dev` and `npm run build`.
 - Run `npm run lint` before committing.
+- Update the release notes above for meaningful changes.
+
+---
+
+## Known Limitations
+
+- Session data is stored only in browser localStorage; clearing browser data will erase chat history.
+- Image uploads are base64-encoded and sent to the Gemini API; ensure you're comfortable with Gemini's data retention policies.
+- The app requires an active internet connection for Gemini API calls.
 
 ---
 
 ## License
 
 This project is provided as-is for educational purposes.
+
+---
+
+## Support
+
+For issues, questions, or feature requests, open an issue on [GitHub](https://github.com/darshil0/socratic-math-tutor/issues).
