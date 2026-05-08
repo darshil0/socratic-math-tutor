@@ -11,6 +11,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 
 ### Fixed
 - **Version Discrepancy**: Standardized the project version to 1.5.1 across `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`, resolving inconsistencies between 1.4.7 and 1.4.8.
+- **TypeScript Configuration**: Updated `tsconfig.json` with Vite-compatible compiler settings including `vite/client` type support, `esModuleInterop`, and JSON module resolution.
 
 ### Changed
 - **Architectural Restructuring**: Refactored `src/App.tsx` to use the new `useImageUpload` hook, reducing component bloat and improving code modularity.
