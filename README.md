@@ -72,14 +72,20 @@ src/
 
 1. Clone the repository.
 2. Copy `.env.example` to `.env` and add your API key:
-   ```bash
-   cp .env.example .env
-   ```
+   - macOS / Linux:
+     ```bash
+     cp .env.example .env
+     ```
+   - Windows PowerShell:
+     ```powershell
+     copy .env.example .env
+     ```
 3. Install dependencies and start the dev server:
    ```bash
    npm install
    npm run dev
    ```
+   If `npm` is not available, install Node.js from https://nodejs.org and ensure it is on your PATH.
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 5. Upload a photo of a math problem using the camera icon, or type a question directly.
 6. Follow the tutor's first step, and ask "Why did we do that?" any time you want a deeper explanation.
@@ -133,6 +139,18 @@ The app defaults to port `3000`. If this port is in use, Vite will attempt to us
 ```bash
 npm run dev -- --port 3001
 ```
+
+### Node.js / npm Not Found
+If your terminal reports that `npm` is not recognized:
+1. Install Node.js from https://nodejs.org.
+2. Restart your terminal after installation.
+3. Verify with:
+   ```bash
+   node --version
+   npm --version
+   ```
+4. If the commands still fail, ensure your shell is using the correct PATH where Node.js is installed.
+
 
 ---
 

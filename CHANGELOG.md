@@ -7,6 +7,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 ### Added
 - **Accessibility Enhancements**: Added descriptive `aria-label` attributes to the "Clear Chat History" and "Concept Library" buttons in the Header, improving screen reader support.
 - **Image Upload Hook**: Created a new custom hook `useImageUpload` in `src/hooks/useImageUpload.ts` to centralize image handling logic (state, uploading, and clearing).
+- **Documentation Improvements**: Updated `README.md` with Windows-compatible `.env` setup instructions and Node/npm troubleshooting guidance.
 
 ### Fixed
 - **Version Discrepancy**: Standardized the project version to 1.5.0 across `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`, resolving inconsistencies between 1.4.7 and 1.4.8.
