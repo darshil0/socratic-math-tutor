@@ -205,20 +205,7 @@ Output goes to the `dist/` folder. Deploy via Vercel, Netlify, GitHub Pages, or 
 
 ## Release Notes
 
-### v1.5.1
-
-- Updated `tsconfig.json` with Vite-compatible compiler settings.
-- Added `vite/client` types, `esModuleInterop`, and JSON module support.
-- Fixed port references in documentation (5173 vs 3000).
-- Improved README clarity and troubleshooting section.
-- Enhanced project structure documentation.
-
-### v1.5.0
-
-- Initial stable release.
-- Socratic tutoring workflow with Gemini API.
-- Image upload and localStorage session persistence.
-- Concept Library with search and quizzes.
+See [CHANGELOG.md](CHANGELOG.md) for detailed release notes and version history.
 
 ---
 
@@ -230,7 +217,7 @@ When contributing, please:
 - Write clear, user-friendly error messages.
 - Test locally with `npm run dev` and `npm run build`.
 - Run `npm run lint` before committing.
-- Update the release notes above for meaningful changes.
+- Update CHANGELOG.md for meaningful changes.
 
 ---
 

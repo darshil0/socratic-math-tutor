@@ -17,6 +17,13 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 - **Architectural Restructuring**: Refactored `src/App.tsx` to use the new `useImageUpload` hook, reducing component bloat and improving code modularity.
 - **Performance Optimization**: Wrapped the `onClearSession` handler in `src/App.tsx` with `useCallback` to ensure a stable reference is passed to child components.
 
+## [1.5.0] - 2026-05-08
+
+- Initial stable release.
+- Socratic tutoring workflow with Gemini API.
+- Image upload and localStorage session persistence.
+- Concept Library with search and quizzes.
+
 ## [1.4.8] - 2026-05-07
 
 ### Added
