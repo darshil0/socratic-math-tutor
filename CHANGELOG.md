@@ -2,6 +2,20 @@
 
 All notable changes to the Socratic Math Tutor project will be documented in this file.
 
+## [1.5.2] - 2026-05-28
+
+### Added
+- **Testing Infrastructure**: Integrated Vitest and JSDOM for unit testing. Added a comprehensive test suite in `src/tests/` covering type guards, service logic, and custom hooks.
+- **Project Documentation**: Created `CONTRIBUTING.md` and `TESTING.md` to provide clear guidelines for developers and contributors.
+- **Test Script**: Added `npm run test` to `package.json` for easy test execution.
+
+### Fixed
+- **Security Vulnerabilities**: Resolved several moderate and critical vulnerabilities through `npm audit fix`, including issues in `protobufjs`, `postcss`, and `ws`.
+
+### Changed
+- **Dependencies**: Updated all project dependencies to their latest compatible stable versions.
+- **Version Bump**: Incremented project version to 1.5.2 across all metadata and documentation.
+
 ## [1.5.1] - 2026-05-08
 
 ### Added

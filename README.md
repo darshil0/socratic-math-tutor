@@ -1,6 +1,6 @@
 # Socratic Math Tutor
 
-> **Version 1.5.1** — A compassionate AI tutor for step-by-step math reasoning, built with React, Vite, and Google Gemini.
+> **Version 1.5.2** — A compassionate AI tutor for step-by-step math reasoning, built with React, Vite, and Google Gemini.
 
 ---
 
@@ -190,6 +190,7 @@ npm run dev -- --port 3001
 | `npm run preview` | Preview production build locally |
 | `npm run clean` | Remove `dist/` directory |
 | `npm run lint` | Run TypeScript type checking |
+| `npm run test` | Run unit tests with Vitest |
 
 ---
 
