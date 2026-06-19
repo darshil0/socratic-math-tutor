@@ -28,13 +28,15 @@ The app preserves session history in the browser, renders math with KaTeX, and o
 ## Tech Stack
 
 - React 19
-- Vite 6
-- TypeScript 5
+- Vite 8
+- TypeScript 5.8
 - Tailwind CSS v4
-- Google Gemini API
+- Google Gemini API (@google/genai)
 - react-markdown with remark-math and rehype-katex
-- motion/react
+- motion/react (formerly Framer Motion)
 - lucide-react
+- Vitest (testing)
+- @testing-library/react
 
 ---
 
@@ -92,7 +94,7 @@ npm install
 npm run dev
 ```
 
-The app will open at `http://localhost:5173` (Vite default).
+The app will open at `http://localhost:3000` (configured in `package.json`).
 
 ---
 
@@ -150,7 +152,7 @@ And `tsconfig.json` has:
 }
 ```
 
-### Port 5173 is already in use
+### Port 3000 is already in use
 
 Run on a different port:
 
@@ -185,12 +187,14 @@ npm run dev -- --port 3001
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start Vite dev server (default: localhost:5173) |
+| `npm run dev` | Start Vite 8 dev server (default: localhost:3000) |
 | `npm run build` | Build for production to `dist/` |
 | `npm run preview` | Preview production build locally |
 | `npm run clean` | Remove `dist/` directory |
-| `npm run lint` | Run TypeScript type checking |
+| `npm run lint` | Run TypeScript type checking (`tsc --noEmit`) |
 | `npm run test` | Run unit tests with Vitest |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Check test coverage |
 
 ---
 
