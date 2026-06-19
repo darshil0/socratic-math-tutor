@@ -5,15 +5,15 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 ## [1.5.2] - 2026-05-28
 
 ### Added
-- **Testing Infrastructure**: Integrated Vitest and JSDOM for unit testing. Added a comprehensive test suite in `src/tests/` covering type guards, service logic, and custom hooks.
+- **Testing Infrastructure**: Integrated Vitest (^1.6.0) and JSDOM for unit testing. Added a comprehensive test suite using the `*.test.ts` pattern alongside source files covering type guards, service logic, and custom hooks.
 - **Project Documentation**: Created `CONTRIBUTING.md` and `TESTING.md` to provide clear guidelines for developers and contributors.
-- **Test Script**: Added `npm run test` to `package.json` for easy test execution.
+- **Test Scripts**: Added `npm run test`, `npm run test:watch`, and `npm run test:coverage` to `package.json` for easy test execution.
 
 ### Fixed
 - **Security Vulnerabilities**: Resolved several moderate and critical vulnerabilities through `npm audit fix`, including issues in `protobufjs`, `postcss`, and `ws`.
 
 ### Changed
-- **Dependencies**: Updated all project dependencies to their latest compatible stable versions.
+- **Dependencies**: Updated all project dependencies to their latest compatible stable versions (Vite 8, TypeScript 5.8, React 19, @google/genai ^1.46.0).
 - **Version Bump**: Incremented project version to 1.5.2 across all metadata and documentation.
 
 ## [1.5.1] - 2026-05-08
@@ -25,7 +25,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 
 ### Fixed
 - **Version Discrepancy**: Standardized the project version to 1.5.1 across `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`, resolving inconsistencies between 1.4.7 and 1.4.8.
-- **TypeScript Configuration**: Updated `tsconfig.json` with Vite-compatible compiler settings including `vite/client` type support, `esModuleInterop`, and JSON module resolution.
+- **TypeScript Configuration**: Updated `tsconfig.json` with Vite 8-compatible compiler settings including `vite/client` type support, `verbatimModuleSyntax`, `esModuleInterop`, and JSON module resolution.
 
 ### Changed
 - **Architectural Restructuring**: Refactored `src/App.tsx` to use the new `useImageUpload` hook, reducing component bloat and improving code modularity.
@@ -79,7 +79,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 - **Custom Chat Hook**: Extracted chat state management and transmission logic into a specialized `useChat` hook in `src/hooks/useChat.ts`. This decouples the UI from the AI service orchestration and simplifies `App.tsx`.
 
 ### Changed
-- **Animation Library Migration**: Migrated from the legacy `framer-motion` package to the unified `motion/react` library, aligning with the latest React 19 standards and optimizing bundle size.
+- **Animation Library**: Using `motion` (formerly Framer Motion, npm package: `motion`) for React 19-compatible animations, optimized bundle size.
 - **Version Bump**: Incremented project version to 1.4.7.
 
 ## [1.4.6] - 2026-04-14
@@ -88,7 +88,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 - **Path Alias Mismatch**: Corrected `vite.config.ts` to resolve the `@` alias to `src/` instead of the project root, aligning it with the `tsconfig.json` mapping of `"@/*" → "src/*"`. This mismatch would cause runtime import failures for any component using `@/` prefixed paths.
 - **Overlay Positioning**: Added `relative` positioning to the root `<div>` in `App.tsx`. The `ConceptLibrary` overlay uses `absolute inset-0` to fill the viewport, which requires a positioned ancestor — without this fix the overlay escaped its container and could cover unintended areas of the page.
 - **Functional Callback Detection**: Replaced `value instanceof Function` with `typeof value === "function"` in `useLocalStorage.ts`. The `instanceof` check is unreliable for arrow functions across realm boundaries; `typeof` is the correct and portable approach.
-- **SDK Error Resilience**: Wrapped the `response.text` getter access in `ConceptService.ts` inside a dedicated `try/catch`. The `@google/genai` SDK getter can throw when the response has no candidates; the previous null check only ran after the potential throw, so errors were silently swallowed and the function returned nothing.
+- **SDK Error Resilience**: Wrapped the `response.text` getter access in `ConceptService.ts` inside a dedicated `try/catch`. The `@google/genai` SDK (^1.46.0) getter can throw when the response has no candidates; the previous null check only ran after the potential throw, so errors were silently swallowed and the function returned nothing.
 - **AnimatePresence Key Anti-Pattern**: Replaced `key={idx}` (array index) with a stable content-derived key in `ChatArea.tsx`. Index keys cause `AnimatePresence` to mis-identify elements during insertions and deletions, producing broken enter/exit animations.
 - **Shift+Enter Guard**: Added `!e.shiftKey` check to the `onKeyDown` handler in `ChatInput.tsx` so pressing Shift+Enter does not trigger a send. Also added `e.preventDefault()` to suppress any default browser behaviour on Enter. This correctly reserves Shift+Enter for future multiline textarea upgrades.
 
@@ -114,7 +114,7 @@ All notable changes to the Socratic Math Tutor project will be documented in thi
 - **Chat Image Rendering**: The `ChatMessage` component now supports rendering multiple parts, including base64-encoded images.
 
 ### Fixed
-- **API Reliability**: Refactored `GeminiService.ts` to correctly handle the `@google/genai` SDK v2.0 requirements, including the correct `systemInstruction` format and `AsyncGenerator` streaming logic.
+- **API Reliability**: Refactored `GeminiService.ts` to correctly handle the `@google/genai` SDK (^1.46.0) requirements, including the correct `systemInstruction` format and `AsyncGenerator` streaming logic.
 - **Type Safety**: Improved the `Message` type definition to correctly align with the Gemini API part structure, making `text` optional and adding `inlineData`.
 - **Logic Cleanup**: Removed unused variables and optimized the `handleSend` flow in `App.tsx`.
 
