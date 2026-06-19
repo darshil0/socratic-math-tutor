@@ -12,15 +12,20 @@ out/
 # ─── Cache & Temp ────────────────────────────────────────────────────────────
 .cache/
 .vite/
+.vite-plugin-cache/
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 
 # ─── Testing & Coverage ──────────────────────────────────────────────────────
 coverage/
 .nyc_output/
+vitest/
 
 # ─── Environment & Secrets ───────────────────────────────────────────────────
 .env*
 !.env.example
+.env.local
+.env.*.local
 
 # ─── Logs ────────────────────────────────────────────────────────────────────
 *.log
@@ -34,6 +39,7 @@ lerna-debug.log*
 .vscode/
 !.vscode/extensions.json
 .idea/
+*.sublime-*
 *.suo
 *.ntvs*
 *.njsproj
@@ -44,3 +50,8 @@ lerna-debug.log*
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# ─── Node/Ecosystem ──────────────────────────────────────────────────────────
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
