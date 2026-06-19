@@ -2,5 +2,5 @@
   "name": "socratic-math-tutor",
   "version": "1.5.2",
   "description": "A compassionate AI math tutor that guides you through complex problems step-by-step using the Socratic method.",
-  "requestFramePermissions": ["camera"]
+  "private": true
 }
