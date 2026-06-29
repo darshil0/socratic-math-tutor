@@ -1,12 +1,6 @@
 # Socratic Math Tutor
 
-**Version 1.5.2** — A compassionate, step-by-step math tutor built with React, Vite, and Google Gemini.  
-GitHub: [github.com/Farhan-Feb/AI_Math_Tutor_Gemini_1.5_Flash](https://github.com/Farhan-Feb/AI_Math_Tutor_Gemini_1.5_Flash)
-
----
-
 ## Overview
-
 Socratic Math Tutor helps learners understand how to solve math problems instead of just showing the final answer. Upload a problem image or type a question, and the tutor will guide you with small hints and clear explanations for each step.
 
 Session history is stored in the browser, math is rendered with KaTeX, and a searchable Concept Library offers extra explanations, quizzes, and practice problems.
@@ -247,8 +241,3 @@ When contributing, please:
 This project is provided as-is for educational use.
 
 ---
-
-## Support
-
-For bugs, questions, or feature requests, please open an issue on GitHub:  
-https://github.com/Farhan-Feb/AI_Math_Tutor_Gemini_1.5_Flash/issues
