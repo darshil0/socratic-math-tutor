@@ -1,23 +1,26 @@
-# Contributing to Socratic Math Tutor
+## Contributing to Socratic Math Tutor
 
-Thank you for your interest in contribute! We welcome help in making this tutor more effective and accessible.
+Thank you for your interest in contributing to Socratic Math Tutor. We welcome improvements that make the tutor more effective, accessible, and reliable.
 
 ## Development Standards
 
-### 1. TypeScript & Type Safety
-- Maintain strict type safety (configured in `tsconfig.json`).
-- Avoid using `any`. Use proper interfaces and type guards.
-- All new features should include appropriate TypeScript definitions in `src/types/`.
-- Run `npm run lint` (`tsc --noEmit`) to verify type safety before committing.
+### TypeScript and Type Safety
 
-### 2. Socratic Method
-- The tutor should never just give the answer.
-- Always guide the student through reasoning.
-- Use encouraging and compassionate language.
+- Maintain strict type safety as configured in `tsconfig.json`.
+- Avoid `any`. Prefer explicit interfaces, enums, and type guards.
+- Add new type definitions in `src/types/` when introducing new features.
+- Run `npm run lint` (`tsc --noEmit`) before committing to verify type safety.
 
-### 3. Component Architecture
+### Socratic Method
+
+- The tutor should guide students through reasoning instead of giving direct answers.
+- Use encouraging, compassionate language.
+- Preserve the step-by-step tutoring style in all user-facing content.
+
+### Component Architecture
+
 - Keep components small and focused.
-- Use hooks for logic separation.
+- Use hooks to separate reusable logic from UI concerns.
 - Follow the existing directory structure:
   - `src/components/chat/`
   - `src/components/layout/`
@@ -26,36 +29,37 @@ Thank you for your interest in contribute! We welcome help in making this tutor 
 
 ## Testing Guidelines
 
-- We use [Vitest](https://vitest.dev/) for unit testing with [jsdom](https://github.com/jsdom/jsdom) for browser simulation.
-- Place test files alongside source files using the `*.test.ts` pattern:
-  - `src/services/GeminiService.test.ts`
-  - `src/hooks/useImageUpload.test.ts`
-  - `src/types.test.ts`
+We use [Vitest](https://vitest.dev/) for unit testing and [jsdom](https://github.com/jsdom/jsdom) for browser simulation. [testing-library](https://testing-library.com/docs/react-testing-library/api/)
+
+- Place test files alongside source files using the `*.test.ts` pattern.
+  - Example: `src/services/GeminiService.test.ts`
+  - Example: `src/hooks/useImageUpload.test.ts`
+  - Example: `src/types.test.ts`
 - Use `vi.mock` for external API dependencies.
-- Use `@testing-library/react`'s `renderHook` for hook testing.
-- Run tests before submitting:
+- Use `renderHook` from `@testing-library/react` for hook testing. [testing-library](https://testing-library.com/docs/react-testing-library/api/)
+- Run tests before submitting changes:
   ```bash
-  npm run test           # Run all tests once
-  npm run test:watch     # Run in watch mode
-  npm run test:coverage  # Check coverage
+  npm run test
+  npm run test:watch
+  npm run test:coverage
   ```
 
 ## Code Quality Checklist
 
-Before submitting a pull request, ensure:
+Before opening a pull request, make sure all of the following are complete:
 
-- ✅ `npm run lint` passes (TypeScript type checking)
-- ✅ `npm run test` passes (all unit tests)
-- ✅ `npm run build` passes (production build)
-- ✅ No `any` types in new code
-- ✅ Test files accompany new services/hooks
-- ✅ `CHANGELOG.md` is updated
+- `npm run lint` passes.
+- `npm run test` passes.
+- `npm run build` passes.
+- No new `any` types were introduced.
+- Test files were added for new services and hooks.
+- `CHANGELOG.md` was updated for meaningful changes.
 
 ## Submission Process
 
 1. Fork the repository.
-2. Create a feature branch (e.g., `feature/new-concept` or `fix/chat-bug`).
-3. Commit your changes with descriptive messages.
+2. Create a feature branch, such as `feature/new-concept` or `fix/chat-bug`.
+3. Commit your changes with clear, descriptive messages.
 4. Run the full verification suite:
    ```bash
    npm run lint
@@ -63,8 +67,10 @@ Before submitting a pull request, ensure:
    npm run build
    ```
 5. Update `CHANGELOG.md` with your changes.
-6. Submit a pull request.
+6. Open a pull request.
 
-## Questions?
+## Questions
 
-Open an issue on [GitHub](https://github.com/darshil0/socratic-math-tutor/issues) if you need help!
+If you need help, open an issue on [GitHub](https://github.com/darshil0/socratic-math-tutor/issues). [github](https://github.com/doocs/.github/blob/main/CONTRIBUTING.md)
+
+A few improvements I made: fixed the opening sentence, tightened repeated phrasing, and made the checklist more parallel and easier to scan.
